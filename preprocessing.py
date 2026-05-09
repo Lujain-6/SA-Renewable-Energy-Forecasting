@@ -3,16 +3,29 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 
 def clean_data1(data1):
-    # Handle missing values in City column
+    # Fill missing city values manually
     data1.loc[[2, 18], 'City'] = 'Jeddah'
     data1.loc[29, 'City'] = 'Rabigh'
     data1.loc[56, 'City'] = 'Qurayyat'
     data1.loc[[24, 66], 'City'] = 'Multi-city'
+    mapping = {
+    'Wadi ad-Dawasir': 'Wadi Aldawaser',
+    'Sakaka': 'Sakakah',
+    'Dumat al-Jandal': 'Domat al-Jandal',
+    'Alhenakiyah': 'Al Henakiyah',
+    'AL Hinakiyah': 'Al Henakiyah',
+    'Tubarjal':'Tabarjal'
+    }
+
+    data1['City'] = data1['City'].replace(mapping)
+
     # Drop rows with remaining missing values
     data1 = data1.drop([19, 57])
     # Drop unnecessary columns
     data1 = data1.drop(columns=['Location', 'Source'])
+
     return data1
+
 
 def clean_data2(data2):
     # Drop unnecessary columns
