@@ -144,14 +144,18 @@ def plot_forecast(df_raw, forecast_until=2030):
     print(f"Predicted capacity in 2030: {pred_2030:,.0f} MW")
     print(f"Gap from Vision 2030 target: {gap:,.0f} MW")
     # Explain how the forecast number was calculated
-    print("\n📈 How the forecast is calculated:")
+    print("\n How the forecast is calculated:")
     print(f"   The model adds ~{model.coef_[0]:,.0f} MW every year based on historical growth.")
     print(f"   Model confidence (R²): {model.score(X, y):.2f} out of 1.0")
     
     # Explain the main factor driving the forecast
-    print("\n Key influencing factor:")
-    print("   The main driver is the consistent increase in")
-    print("   project count and capacity year over year.")
+    # Find the year with the highest capacity added (real data-driven insight)
+    best_year = yearly.loc[yearly['Capacity'].idxmax(), 'Year']
+    best_val = yearly.loc[yearly['Capacity'].idxmax(), 'Capacity']
+
+    print("\n🔍 Key influencing factor:")
+    print(f"   Highest growth was recorded in {best_year} with {best_val:,.0f} MW added.")
+    print(f"   The model uses this consistent upward trend to project future capacity.")
 
     # Give a plain-language conclusion about Vision 2030 alignment
     if gap > 0:
