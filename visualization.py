@@ -56,7 +56,8 @@ def plot_yearly_growth(df_raw):
     plt.tight_layout()
     plt.savefig('output_yearly_growth.png', dpi=150)
     plt.show()
-    # SOLAR VS WIND COMPARISON  
+    print("Chart saved: output_yearly_growth.png")
+# SOLAR VS WIND COMPARISON  
 def plot_solar_vs_wind(df_raw):
     """
     Expects columns: 'Type (solar/ wind)', 'Capacity', 'Year', 'Installed / Planned'
@@ -114,25 +115,37 @@ def plot_solar_vs_wind(df_raw):
     plt.show()
 
     print("Chart saved: output_solar_vs_wind.png")
-    # REGIONAL DISTRIBUTION
+    ## REGIONAL DISTRIBUTION
 def plot_regional_distribution(df_raw):
+
     """
-    Expects columns: 'City', 'Capacity', 'Installed / Planned'
+    Expects columns:
+    'City',
+    'Capacity',
+    'Installed / Planned'
     """
-    # Group data by City and Status, sum the capacity, and pivot to create columns for 'Installed' and 'Planned'
+
+    # Group renewable capacity by city and project status
     regional = df_raw.groupby(
         ['City', 'Installed / Planned']
     )['Capacity'].sum().unstack(fill_value=0)
 
-    # Sort regions based on the 'Installed' capacity in ascending order for a better horizontal bar visual
+    # Remove multi-city projects
+    regional = regional.drop(
+        index='Multi-city',
+        errors='ignore'
+    )
+
+    # Sort regions by installed capacity
     regional = regional.sort_values(
         by='Installed',
-        ascending=True)
+        ascending=True
+    )
 
-    # Initialize the figure and axis for the horizontal bar chart
+    # Create chart figure
     fig, ax = plt.subplots(figsize=(11, 7))
 
-    
+    # Create stacked horizontal bar chart
     regional.plot(
         kind='barh',
         stacked=True,
@@ -140,40 +153,59 @@ def plot_regional_distribution(df_raw):
         color=['#2ecc71', '#f39c12']
     )
 
+    # Set x-axis label
     ax.set_xlabel('Total Capacity (MW)')
-    ax.set_title('Regional Renewable Energy Distribution\n(Installed vs Planned)')
 
+    # Set chart title
+    ax.set_title(
+        'Regional Renewable Energy Distribution\n'
+        '(Installed vs Planned)'
+    )
+
+    # Format x-axis values
     ax.xaxis.set_major_formatter(
         mticker.FuncFormatter(lambda x, _: f'{x:,.0f}')
     )
 
+    # Adjust layout
     plt.tight_layout()
-    plt.savefig('output_regional_distribution.png', dpi=150)
+
+    # Save chart image
+    plt.savefig(
+        'output_regional_distribution.png',
+        dpi=150
+    )
+
+    # Display chart
     plt.show()
 
+    # Print saved chart message
     print("Chart saved: output_regional_distribution.png")
 
-    total_capacity = regional.sum(axis=1).sort_values(ascending=False)
+    # Calculate total renewable capacity for each city
+    total_capacity = regional.sum(
+        axis=1
+    ).sort_values(ascending=False)
 
-    print("\n Top 3 regions by total capacity:")
+    # Print top regions title
+    print("\nTop 3 regions by total capacity:")
 
-    for i, (city, val) in enumerate(total_capacity.head(3).items(), 1):
-        print(f"   {i}. {city}: {val:,.0f} MW") 
+    # Print top 3 regions
+    for i, (city, val) in enumerate(
+        total_capacity.head(3).items(),
+        1
+    ):
 
-    # Plot renewable energy forecast until 2030
+        print(
+            f"   {i}. {city}: {val:,.0f} MW"
+        ) 
+        # Plot renewable energy forecast until 2030
 def plot_forecast(df_raw, forecast_until=2030):
 
     # Keep only installed renewable projects
-  # Group renewable capacity by city and project status
-    regional = df_raw.groupby(
-    ['City', 'Installed / Planned']
-    )['Capacity'].sum().unstack(fill_value=0)
-
-    # Remove multi-city projects
-    regional = regional.drop(
-    index='Multi-city',
-    errors='ignore'
-    )
+    installed = df_raw[
+        df_raw['Installed / Planned'] == 'Installed'
+    ]
 
     # Calculate yearly renewable capacity
     yearly = installed.groupby(
@@ -191,7 +223,8 @@ def plot_forecast(df_raw, forecast_until=2030):
     # Prepare cumulative capacity target
     y = yearly['Cumulative_MW'].values
 
-    model =train_renewable_model(X, y)
+    # Train renewable forecasting model
+    model = train_renewable_model(X, y)
 
     # Create future years until 2030
     future_years = np.arange(
@@ -296,5 +329,4 @@ def plot_forecast(df_raw, forecast_until=2030):
         yearly,
         model.coef_[0]
     )
-    print("Chart saved: output_yearly_growth.png")
 
