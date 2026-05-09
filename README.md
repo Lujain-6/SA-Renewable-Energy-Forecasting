@@ -22,7 +22,7 @@ The model utilizes the Linear Regression algorithm to establish relationships be
 | clean_data2(data2) | drop the unnecessary Columns, add city column and rename some columns to match data1 |
 | merge_and_encode(data1, data2) | stack the cleaned datasets. then Standardize and encode the columns to ensure optimal model training |
 | train_renewable_model(X, y) | use Linear Regression to train the model on historical project data to forecast the expected energy capacity |
-| evaluate_forecast(future_2030, vision_target, trend_fit, yearly, slope) | Outputs the final model metrics (R^2 score) and calculates the achievement gap toward Vision 2030 |
+| evaluate_forecast(future_2030, vision_target, trend_fit, yearly, slope) | Outputs the final model metrics ($R^2$ score) and calculates the achievement gap toward Vision 2030 |
 ## Getting Started
 
  [1] Prerequisites
