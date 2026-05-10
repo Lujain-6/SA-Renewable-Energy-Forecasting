@@ -13,37 +13,7 @@ def main():
     d2_cleaned = clean_data2(data2_raw)
 
     # Merge datasets for analysis and forecasting
-    df_raw = pd.concat(
-        [d2_cleaned, d1_cleaned],
-        axis=0
-    ).reset_index(drop=True)
-
-    # Clean energy type values
-    df_raw['Type (solar/ wind)'] = (
-        df_raw['Type (solar/ wind)']
-        .astype(str)
-        .str.replace(' energy', '', case=False, regex=False)
-        .str.strip()
-        .str.title()
-    )
-
-    # Clean project status values
-    df_raw['Installed / Planned'] = (
-        df_raw['Installed / Planned']
-        .astype(str)
-        .str.strip()
-        .str.title()
-    )
-
-    # Remove duplicate rows
-    df_raw = df_raw.drop_duplicates(
-        subset=[
-            'Type (solar/ wind)',
-            'Year',
-            'Capacity',
-            'City'
-        ]
-    )
+    df_raw = merge(d1_cleaned, d2_cleaned)
 
     # Print forecast phase title
     print("Building Trend Forecast Model")
