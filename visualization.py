@@ -5,7 +5,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 from sklearn.linear_model import LinearRegression
-
 # YEARLY GROWTH CHART
 def plot_yearly_growth(df_raw):
     """
@@ -56,8 +55,7 @@ def plot_yearly_growth(df_raw):
     plt.tight_layout()
     plt.savefig('output_yearly_growth.png', dpi=150)
     plt.show()
-    print("Chart saved: output_yearly_growth.png")
-# SOLAR VS WIND COMPARISON  
+    # SOLAR VS WIND COMPARISON  
 def plot_solar_vs_wind(df_raw):
     """
     Expects columns: 'Type (solar/ wind)', 'Capacity', 'Year', 'Installed / Planned'
@@ -198,8 +196,9 @@ def plot_regional_distribution(df_raw):
 
         print(
             f"   {i}. {city}: {val:,.0f} MW"
-        ) 
-        # Plot renewable energy forecast until 2030
+        )
+
+    # Plot renewable energy forecast until 2030
 def plot_forecast(df_raw, forecast_until=2030):
 
     # Keep only installed renewable projects
@@ -329,4 +328,5 @@ def plot_forecast(df_raw, forecast_until=2030):
         yearly,
         model.coef_[0]
     )
+    print("Chart saved: output_yearly_growth.png")
 
