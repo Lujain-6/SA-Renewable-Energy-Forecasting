@@ -50,7 +50,7 @@ def clean_data2(data2):
     data2 = data2.drop(columns=['Operation Start Year'])
     return data2
 
-def merge_and_encode(data1, data2):
+def merge(data1, data2):
     # Merge both datasets
     Dataset = pd.concat([data2, data1], axis=0).reset_index(drop=True)
     # Clean energy type values
@@ -61,15 +61,5 @@ def merge_and_encode(data1, data2):
     Dataset = Dataset.sort_values(by='Year', ascending=False).reset_index(drop=True)
     # Drop project name column
     Dataset = Dataset.drop(['Project name'], axis=1)
-    # One-hot encoding for City
-    Dataset = pd.get_dummies(Dataset, columns=['City'], drop_first=True)
-    # Label encoding for Type and Status
-    Dataset['Type (solar/ wind)'] = Dataset['Type (solar/ wind)'].map({
-        'Wind': 1, 'Solar': 2, 'Solar + Wind': 3
-    })
-    Dataset['Installed / Planned'] = Dataset['Installed / Planned'].map({
-        'Installed': 1, 'Planned': 2
-    })
-    # Scale Year and Capacity
-    Dataset[['Year', 'Capacity']] = StandardScaler().fit_transform(Dataset[['Year', 'Capacity']])
+
     return Dataset
