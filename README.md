@@ -68,7 +68,7 @@ Data Collection
 → Forecasting Model  
 → Forecast Evaluation  
 → Visualization  
-→ CI/CD Automation (GitHub Actions)
+→ CI/CD Automation (GitHub Actions)  
 → Dashboard Deployment (Streamlit)
 
 ## Evaluation Metrics
