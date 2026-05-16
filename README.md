@@ -89,6 +89,10 @@ Place the following datasets inside the `data/` folder:
 - saudi-arabia-planned-and-installed-renewables-by-project.csv
 - renewable_energy_projects.csv
 
+To spin up the web dashboard locally, run:
+
+streamlit run app.py
+
 ## Tech Stack
 
 - **Backend:** Python, pandas, NumPy, Scikit-learn (Linear Regression)
