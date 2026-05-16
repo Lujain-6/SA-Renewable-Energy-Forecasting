@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 from sklearn.linear_model import LinearRegression
+from model import train_renewable_model
 # YEARLY GROWTH CHART
 def plot_yearly_growth(df_raw):
     """
