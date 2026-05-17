@@ -22,3 +22,31 @@ logging.basicConfig(
         logging.StreamHandler()
     ]
 )
+
+# Load datasets safely with robust file and parse checks
+def load_data():
+    logging.info("Dataset Loading...")
+    try:
+        file1_path = "data/saudi-arabia-planned-and-installed-renewables-by-project.csv"
+        file2_path = "data/renewable_energy_projects.csv"
+        
+        # Verify if both dataset paths exist before attempting to read
+        if not os.path.exists(file1_path) or not os.path.exists(file2_path):
+            raise FileNotFoundError("One or both dataset CSV files are missing in the 'data/' folder.")
+            
+        data1 = pd.read_csv(file1_path, sep=';')
+        data2 = pd.read_csv(file2_path, sep=',')
+        
+        logging.info(f"Dataset 1 loaded successfully with {len(data1)} rows.")
+        logging.info(f"Dataset 2 loaded successfully with {len(data2)} rows.")
+        return data1, data2
+        
+    except FileNotFoundError as e:
+        logging.error(f"Critical File Error: {e}")
+        raise e
+    except pd.errors.ParserError as e:
+        logging.error(f"CSV Parsing Error (Check structural separators or delimiters): {e}")
+        raise e
+    except Exception as e:
+        logging.error(f"Unexpected error while loading data: {e}")
+        raise e
