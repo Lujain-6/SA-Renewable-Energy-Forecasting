@@ -1,333 +1,223 @@
-# -*- coding: utf-8 -*-
-
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.ticker as mticker
-from sklearn.linear_model import LinearRegression
-from model import train_renewable_model
-# YEARLY GROWTH CHART
+# Generate Yearly Capacity Growth Bar Chart
 def plot_yearly_growth(df_raw):
-    """
-    df_raw: the ORIGINAL (unscaled) merged dataset before StandardScaler.
-    Expects columns: 'Year', 'Capacity', 'Installed / Planned'
-    """
-    # Filter the dataset to include only projects that are already 'Installed'
+    # Filter the dataset to include only operational (Installed) projects
     installed = df_raw[df_raw['Installed / Planned'] == 'Installed']
     
-    # Group data by year and sum the capacity to get total added MW per year
+    # Group the filtered data by Year and calculate the total sum of capacity for each year
     yearly = installed.groupby('Year')['Capacity'].sum().reset_index()
     
-    # Calculate the cumulative sum of capacity across the years
-    yearly['Cumulative_MW'] = yearly['Capacity'].cumsum()
-    
-    # Create a figure and axis for the plot with a specific size
+    # Initialize the plot figure and axis with a custom size
     fig, ax = plt.subplots(figsize=(10, 5))
-
-    # Plot annual added capacity as a bar chart (primary Y-axis)
-    ax.bar(yearly['Year'], yearly['Capacity'], color='#2ecc71', label='Annual Added (MW)')
-
-    # Create a twin Y-axis to share the same X-axis (for the cumulative line)
-    ax2 = ax.twinx()
-
-    # Plot cumulative capacity as a line chart with markers (secondary Y-axis)
-    ax2.plot(yearly['Year'], yearly['Cumulative_MW'], color='#2c3e50',
-             marker='o', linewidth=2, label='Cumulative (MW)')
     
-    # Set labels for the X-axis and both Y-axes
+    # Generate a bar chart using the aggregated yearly data with a specific green color
+    ax.bar(yearly['Year'], yearly['Capacity'], color='#2ecc71', label='Annual Added (MW)')
+    
+    # Configure informative text labels for both X and Y axes along with the chart title
     ax.set_xlabel('Year')
     ax.set_ylabel('Annual Capacity Added (MW)')
-    ax2.set_ylabel('Cumulative Capacity (MW)')
     ax.set_title('Saudi Arabia – Yearly Renewable Energy Growth (Installed Projects)')
     
-    # Ensure the X-axis only displays integer values for years (no decimals)
+    # Format the X-axis to display years as clean, non-decimal integer values
     ax.xaxis.set_major_locator(mticker.MaxNLocator(integer=True))
-
-    # Format the X-axis labels to display as plain year integers
-    ax.xaxis.set_major_formatter(
-        mticker.FuncFormatter(lambda x, _: f'{int(x)}'))
-
-    # Collect legend handles and labels from both axes to merge them into one legend
-    lines1, labels1 = ax.get_legend_handles_labels()
-    lines2, labels2 = ax2.get_legend_handles_labels()
-    ax.legend(lines1 + lines2, labels1 + labels2, loc='upper left')
-
-    # Adjust layout to prevent clipping of labels
+    ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f'{int(x)}'))
+    
+    # Place the chart legend in the upper left corner
+    ax.legend(loc='upper left')
+    
+    # Optimize the spacing of visual elements to prevent truncation, then save and display the plot
     plt.tight_layout()
     plt.savefig('output_yearly_growth.png', dpi=150)
     plt.show()
-    # SOLAR VS WIND COMPARISON  
+    
+    # Log a success message confirming that the image file has been saved
+    logging.info("Chart saved successfully: output_yearly_growth.png")
+
+# Generate Solar vs Wind Energy Mix Comparison Plots with structural data validation
 def plot_solar_vs_wind(df_raw):
-    """
-    Expects columns: 'Type (solar/ wind)', 'Capacity', 'Year', 'Installed / Planned'
-    """
-    # Group data by status and energy type, then sum capacities and pivot for plotting
-    comparison = df_raw.groupby(
-        ['Installed / Planned', 'Type (solar/ wind)']
-    )['Capacity'].sum().unstack(fill_value=0)
+    try:
+        # Guard rail: Verify input argument is a valid pandas DataFrame
+        if not isinstance(df_raw, pd.DataFrame):
+            raise TypeError("Input df_raw must be a valid pandas DataFrame.")
 
-    # Initialize a figure with two side-by-side subplots (1 row, 2 columns)
-    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+        logging.info("Starting solar vs wind energy mix comparative analysis...")
 
-    # Plot a grouped bar chart on the first subplot (Installed vs Planned)
-    comparison.plot(
-        kind='bar',
-        ax=axes[0],
-        color=['#f39c12', '#3498db', '#2ecc71']
-    )
+        # Guard rail: Verify required analysis columns exist in the DataFrame before grouping
+        required_cols = ['Installed / Planned', 'Type (solar/ wind)', 'Capacity']
+        for col in required_cols:
+            if col not in df_raw.columns:
+                raise KeyError(f"Required column '{col}' is missing from the input DataFrame.")
 
-    # Set aesthetics for the first subplot
-    axes[0].set_title('Installed vs Planned Capacity by Energy Type')
-    axes[0].set_xlabel('Project Status')
-    axes[0].set_ylabel('Capacity (MW)')
-    axes[0].tick_params(axis='x', rotation=0)
+        # Group data by status and type to compute summary capacity metrics
+        comparison = df_raw.groupby(['Installed / Planned', 'Type (solar/ wind)'])['Capacity'].sum().unstack(fill_value=0)
+        
+        # Initialize the multi-plot figure consisting of 1 row and 2 columns
+        fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+        
+        # Left subplot: Bar tracking capacity comparisons
+        comparison.plot(kind='bar', ax=axes[0], color=['#f39c12', '#3498db', '#2ecc71'])
+        axes[0].set_title('Installed vs Planned Capacity by Energy Type')
+        axes[0].set_xlabel('Project Status')
+        axes[0].set_ylabel('Capacity (MW)')
+        axes[0].tick_params(axis='x', rotation=0)
+        
+        # Right subplot: Share distribution pie chart showing total proportions
+        totals = df_raw.groupby('Type (solar/ wind)')['Capacity'].sum()
+        axes[1].pie(totals, labels=totals.index, autopct='%1.1f%%', colors=['#f39c12', '#3498db', '#2ecc71'], startangle=140)
+        axes[1].set_title('Total Energy Mix Share')
+        
+        # Add global super title, apply tight bounding boxes, and save to directory
+        plt.suptitle('Solar vs Wind Energy Comparison', fontsize=14, fontweight='bold')
+        plt.tight_layout()
+        plt.savefig('output_solar_vs_wind.png', dpi=150)
+        plt.show()
+        
+        # Log a message confirming the chart image has been successfully created
+        logging.info("Chart saved successfully: output_solar_vs_wind.png")
+        logging.info("Solar vs wind comparison visualization pipeline completed successfully.")
 
-    # Group data by energy type only to calculate the overall mix for the pie chart
-    totals = df_raw.groupby(
-        'Type (solar/ wind)'
-    )['Capacity'].sum()
+    except TypeError as e:
+        logging.error(f"Data type validation error in plot_solar_vs_wind: {e}")
+        raise e
+    except KeyError as e:
+        logging.error(f"Missing column structural error in plot_solar_vs_wind: {e}")
+        raise e
+    except Exception as e:
+        logging.error(f"An unexpected error occurred during solar vs wind charts generation: {e}")
+        raise e
 
-    # Create a pie chart on the second subplot to show percentage distribution
-    axes[1].pie(
-        totals,
-        labels=totals.index,
-        autopct='%1.1f%%',
-        colors=['#f39c12', '#3498db', '#2ecc71'],
-        startangle=140)
-
-    # Set the title for the pie chart
-    axes[1].set_title('Total Energy Mix Share')
-
-    # Add a main centralized title for the entire visualization
-    plt.suptitle(
-        'Solar vs Wind Energy Comparison',
-        fontsize=14,
-        fontweight='bold')
-
-    # Automatically adjust subplot parameters to give specified padding
-    plt.tight_layout()
-
-    plt.savefig(
-        'output_solar_vs_wind.png',
-        dpi=150)
-
-    plt.show()
-
-    print("Chart saved: output_solar_vs_wind.png")
-    ## REGIONAL DISTRIBUTION
+# Generate Regional Energy Distribution Chart with structural data validation
 def plot_regional_distribution(df_raw):
+    try:
+        # Guard rail: Verify input argument is a valid pandas DataFrame
+        if not isinstance(df_raw, pd.DataFrame):
+            raise TypeError("Input df_raw must be a valid pandas DataFrame.")
 
-    """
-    Expects columns:
-    'City',
-    'Capacity',
-    'Installed / Planned'
-    """
+        logging.info("Starting regional energy distribution analysis and chart generation...")
 
-    # Group renewable capacity by city and project status
-    regional = df_raw.groupby(
-        ['City', 'Installed / Planned']
-    )['Capacity'].sum().unstack(fill_value=0)
+        # Guard rail: Verify required analysis columns exist in the DataFrame
+        required_cols = ['City', 'Installed / Planned', 'Capacity']
+        for col in required_cols:
+            if col not in df_raw.columns:
+                raise KeyError(f"Required column '{col}' is missing from the input DataFrame.")
 
-    # Remove multi-city projects
-    regional = regional.drop(
-        index='Multi-city',
-        errors='ignore'
-    )
+        # Group data by City and project status, summing the capacity, and unstack to create separate columns
+        regional = df_raw.groupby(['City', 'Installed / Planned'])['Capacity'].sum().unstack(fill_value=0)
+        
+        # Exclude rows belonging to 'Multi-city' projects to focus strictly on specific individual regions
+        regional = regional.drop(index='Multi-city', errors='ignore')
+        
+        # Sort the regions in ascending order based on the 'Installed' capacity for better visualization alignment
+        regional = regional.sort_values(by='Installed', ascending=True)
+        
+        # Initialize the plot figure and axis with a suitable size for horizontal bars
+        fig, ax = plt.subplots(figsize=(11, 7))
+        
+        # Generate a horizontal stacked bar chart with custom green and orange colors
+        regional.plot(kind='barh', stacked=True, ax=ax, color=['#2ecc71', '#f39c12'])
+        
+        # Set the X-axis text label and chart title
+        ax.set_xlabel('Total Capacity (MW)')
+        ax.set_title('Regional Renewable Energy Distribution\n(Installed vs Planned)')
+        
+        # Format the X-axis numbers to include thousands comma separators (e.g., 10,000)
+        ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f'{x:,.0f}'))
+        
+        # Automatically adjust layout spacing to fit labels neatly without clipping
+        plt.tight_layout()
+        plt.savefig('output_regional_distribution.png', dpi=150)
+        plt.show()
+        
+        # Log a message confirming the chart image has been successfully created
+        logging.info("Chart saved successfully: output_regional_distribution.png")
+        
+        # Calculate the total capacity per city by summing up across both Installed and Planned categories
+        total_capacity = regional.sum(axis=1).sort_values(ascending=False)
+        
+        # Display and print out a summary report highlighting the top 3 regions
+        print("\nTop 3 regions by total capacity:")
+        for i, (city, val) in enumerate(total_capacity.head(3).items(), 1):
+            print(f"   {i}. {city}: {val:,.0f} MW")
+            
+        logging.info("Regional distribution chart and textual summary generated successfully.")
 
-    # Sort regions by installed capacity
-    regional = regional.sort_values(
-        by='Installed',
-        ascending=True
-    )
+    except TypeError as e:
+        logging.error(f"Data type validation error in plot_regional_distribution: {e}")
+        raise e
+    except KeyError as e:
+        logging.error(f"Missing column structural error in plot_regional_distribution: {e}")
+        raise e
+    except Exception as e:
+        logging.error(f"An unexpected error occurred during regional chart generation: {e}")
+        raise e
 
-    # Create chart figure
-    fig, ax = plt.subplots(figsize=(11, 7))
+# Compute Regression Trends and Plot Forecast charts with strict data validation and error handling
+def plot_forecast_by_status(df_raw, status_type, forecast_until=2030):
+    try:
+        if not isinstance(df_raw, pd.DataFrame):
+            raise TypeError("Input df_raw must be a valid pandas DataFrame.")
+        if status_type not in ['Installed', 'Planned']:
+            raise ValueError("status_type must be either 'Installed' or 'Planned'.")
 
-    # Create stacked horizontal bar chart
-    regional.plot(
-        kind='barh',
-        stacked=True,
-        ax=ax,
-        color=['#2ecc71', '#f39c12']
-    )
-
-    # Set x-axis label
-    ax.set_xlabel('Total Capacity (MW)')
-
-    # Set chart title
-    ax.set_title(
-        'Regional Renewable Energy Distribution\n'
-        '(Installed vs Planned)'
-    )
-
-    # Format x-axis values
-    ax.xaxis.set_major_formatter(
-        mticker.FuncFormatter(lambda x, _: f'{x:,.0f}')
-    )
-
-    # Adjust layout
-    plt.tight_layout()
-
-    # Save chart image
-    plt.savefig(
-        'output_regional_distribution.png',
-        dpi=150
-    )
-
-    # Display chart
-    plt.show()
-
-    # Print saved chart message
-    print("Chart saved: output_regional_distribution.png")
-
-    # Calculate total renewable capacity for each city
-    total_capacity = regional.sum(
-        axis=1
-    ).sort_values(ascending=False)
-
-    # Print top regions title
-    print("\nTop 3 regions by total capacity:")
-
-    # Print top 3 regions
-    for i, (city, val) in enumerate(
-        total_capacity.head(3).items(),
-        1
-    ):
-
-        print(
-            f"   {i}. {city}: {val:,.0f} MW"
-        )
-
-    # Plot renewable energy forecast until 2030
-def plot_forecast(df_raw, forecast_until=2030):
-
-    # Keep only installed renewable projects
-    installed = df_raw[
-        df_raw['Installed / Planned'] == 'Installed'
-    ]
-
-    # Calculate yearly renewable capacity
-    yearly = installed.groupby(
-        'Year'
-    )['Capacity'].sum().reset_index()
-
-    # Calculate cumulative renewable capacity
-    yearly['Cumulative_MW'] = yearly[
-        'Capacity'
-    ].cumsum()
-
-    # Prepare years for model training
-    X = yearly['Year'].values.reshape(-1, 1)
-
-    # Prepare cumulative capacity target
-    y = yearly['Cumulative_MW'].values
-
-    # Train renewable forecasting model
-    model = train_renewable_model(X, y)
-
-    # Create future years until 2030
-    future_years = np.arange(
-        yearly['Year'].min(),
-        forecast_until + 1
-    ).reshape(-1, 1)
-
-    # Generate future predictions
-    predictions = model.predict(
-        future_years
-    )
-
-    # Vision 2030 renewable energy target (~58.7 GW)
-    vision_target = 58700
-
-    # Predict renewable capacity in 2030
-    future_2030 = model.predict(
-        [[2030]]
-    )[0]
-
-    # Calculate remaining gap
-    gap = vision_target - future_2030
-
-    # Create chart figure
-    fig, ax = plt.subplots(figsize=(11, 6))
-
-    # Plot historical renewable capacity
-    ax.scatter(
-        yearly['Year'],
-        yearly['Cumulative_MW'],
-        color='#2ecc71',
-        zorder=5,
-        s=60,
-        label='Historical (Installed)'
-    )
-
-    # Plot forecast trend line
-    ax.plot(
-        future_years,
-        predictions,
-        color='#2c3e50',
-        linewidth=2,
-        linestyle='--',
-        label='Linear Regression Forecast'
-    )
-
-    # Plot Vision 2030 target line
-    ax.axhline(
-        y=vision_target,
-        color='#e74c3c',
-        linewidth=1.8,
-        linestyle=':',
-        label=f'Vision 2030 Target ({vision_target:,} MW)'
-    )
-
-    # Add gap annotation
-    ax.annotate(
-        f'Gap in 2030:\n{gap:,.0f} MW',
-        xy=(2030, future_2030),
-        xytext=(2027, future_2030 + 5000),
-        arrowprops=dict(
-            arrowstyle='->',
-            color='black'
-        ),
-        fontsize=9,
-        color='#c0392b'
-    )
-
-    # Set x-axis label
-    ax.set_xlabel('Year')
-
-    # Set y-axis label
-    ax.set_ylabel('Cumulative Capacity (MW)')
-
-    # Set chart title
-    ax.set_title(
-        'Future Renewable Energy Capacity Forecast – Saudi Arabia'
-    )
-
-    # Display chart legend
-    ax.legend()
-
-    # Format y-axis values
-    ax.yaxis.set_major_formatter(
-        mticker.FuncFormatter(lambda x, _: f'{x:,.0f}')
-    )
-
-    # Adjust layout
-    plt.tight_layout()
-
-    # Save chart image
-    plt.savefig('output_forecast.png', dpi=150)
-
-    # Display chart
-    plt.show()
-
-    # Return forecast values for evaluation
-    return (
-        future_2030,
-        vision_target,
-        model.score(X, y),
-        yearly,
-        model.coef_[0]
-    )
-    print("Chart saved: output_yearly_growth.png")
+        logging.info(f"Starting forecasting process specifically for '{status_type}' track...")
+        
+        required_cols = ['Installed / Planned', 'Year', 'Capacity']
+        for col in required_cols:
+            if col not in df_raw.columns:
+                raise KeyError(f"Required column '{col}' is missing from the input DataFrame.")
+        
+        # Smart dynamic filtering logic
+        if status_type == 'Installed':
+            filtered_df = df_raw[df_raw['Installed / Planned'] == 'Installed']
+            chart_title = 'Future Renewable Energy Capacity Forecast – Installed Baseline'
+            chart_color = '#2ecc71'  # Green
+            line_style = '--'
+        else:
+            filtered_df = df_raw[df_raw['Installed / Planned'].isin(['Installed', 'Planned'])]
+            chart_title = 'Future Renewable Energy Capacity Forecast – Combined (Installed + Planned)'
+            chart_color = '#f39c12'  # Orange/Amber
+            line_style = '-.'
+            
+        # Sort by year first, group, then apply .cumsum() for cumulative capacity tracking
+        yearly = filtered_df.groupby('Year')['Capacity'].sum().sort_index().cumsum().reset_index()
+        
+        if yearly.empty:
+            raise ValueError(f"No project data found for execution track: '{status_type}'.")
+            
+        X = yearly['Year'].values.reshape(-1, 1)
+        y = yearly['Capacity'].values
+        
+        model = train_renewable_model(X, y)
+        future_years = np.arange(yearly['Year'].min(), forecast_until + 1).reshape(-1, 1)
+        predictions = model.predict(future_years)
+        
+        vision_target = 58700
+        future_2030 = model.predict([[2030]])[0]
+        
+        # Plotting configuration
+        fig, ax = plt.subplots(figsize=(11, 6))
+        if status_type == 'Installed':
+            data_label = 'Cumulative Data (Installed)'
+        else:
+            data_label = 'Cumulative Data (Installed + Planned)'
+        # Plot continuous cumulative line + scatter points
+        ax.plot(yearly['Year'], yearly['Capacity'], color=chart_color, linewidth=2, marker='o', label=data_label)
+        ax.plot(future_years, predictions, color='#2c3e50', linewidth=2, linestyle=line_style, label= 'Model Prediction Line')
+        ax.axhline(y=vision_target, color='#e74c3c', linewidth=1.8, linestyle=':', label=f'Vision 2030 Target ({vision_target:,} MW)')
+        
+        ax.set_xlabel('Year', fontweight='bold')
+        ax.set_ylabel('Total Cumulative Capacity (MW)', fontweight='bold')
+        ax.set_title(chart_title, fontweight='bold', fontsize=12)
+        ax.legend(loc='upper left')
+        ax.grid(True, linestyle=':', alpha=0.6)
+        ax.yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f'{x:,.0f}'))
+        plt.tight_layout()
+        output_filename = f'output_forecast_{status_type.lower()}.png'
+        plt.savefig(output_filename, dpi=150)
+        plt.show()
+        
+        logging.info(f"Forecasting completed and cumulative asset saved: {output_filename}")
+        return future_2030, vision_target, model.score(X, y), model.coef_[0]
+    except Exception as e:
+        logging.error(f"Error occurred during {status_type} forecasting: {e}")
+        raise e
 
