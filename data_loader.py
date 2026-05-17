@@ -1,10 +1,24 @@
-import pandas as pd
-def load_data():
-    data1 = pd.read_csv("data/saudi-arabia-planned-and-installed-renewables-by-project.csv", sep=';')
-    data2 = pd.read_csv("data/renewable_energy_projects.csv", sep=',')
-    return data1, data2
+# This library provides simple and efficient tools for predictive data analysis
+!pip install scikit-learn
 
-def split_installed_planned(df):
-    installed = df[df["Installed / Planned"] == "Installed"]
-    planned = df[df["Installed / Planned"] == "Planned"]
-    return installed, planned
+# pytest: A framework to write and run automated unit tests for our code functions.
+!pip install pytest
+
+import os
+import time
+import logging
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+from sklearn.linear_model import LinearRegression
+
+# Configure logging to output to both a local log file and the console stream
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('energy_analysis.log'),
+        logging.StreamHandler()
+    ]
+)
