@@ -1,139 +1,51 @@
-# Forecast Evaluation Function
+# Evaluate predictive statistics against Vision targets with safety guards
+def evaluate_dual_forecasts(inst_metrics, plan_metrics):
+    try:
+        logging.info("Initiating comprehensive comparative analysis on cumulative predictive tracks...")
+        
+        # Guard rail: Verify both positional arguments are structured as list/tuple matrices
+        if not isinstance(inst_metrics, (tuple, list)) or not isinstance(plan_metrics, (tuple, list)):
+            raise TypeError("Track evaluation inputs must be structured inside a tuple or list package.")
 
-# Define forecast evaluation function
-def evaluate_forecast(
+        print("\n" + "="*70)
+        print("          RENEWABLE ENERGY COMPREHENSIVE FORECAST EVALUATION          ")
+        print("="*70)
+        
+        # Track 1 Parsing: Unpack historical baseline metrics
+        i_2030, i_target, i_r2, i_slope = inst_metrics
+        print(f"1-INSTALLED BASELINE ONLY TRACK (Current Actual Speed):")
+        print(f"    - Cumulative Predicted 2030 Capacity : {i_2030:,.2f} MW")
+        print(f"    - Strategic Vision 2030 Target        : {i_target:,.2f} MW")
+        print(f"    - Target Shortfall Remaining Gap      : {i_target - i_2030:,.2f} MW")
+        print(f"    - Model Statistical Accuracy Score R²: {i_r2:.4f}")
+        print(f"    - Historical Annualized Growth Speed  : {i_slope:,.2f} MW/year")
+        
+        print("-"*70)
+        
+        # Track 2 Parsing: Unpack combined future pipeline metrics
+        p_2030, p_target, p_r2, p_slope = plan_metrics
+        print(f"2-COMBINED TARGET TRACK (Installed Baseline + Planned Pipeline):")
+        print(f"    - Cumulative Predicted 2030 Capacity : {p_2030:,.2f} MW")  
+        print(f"    - Strategic Vision 2030 Target        : {p_target:,.2f} MW")
+        
+        # Dynamic context checking to compute gaps correctly even if the prediction overshoots the target
+        gap = p_target - p_2030
+        if gap > 0:
+            print(f"    - Expected Deficit Gap to Target      : {gap:,.2f} MW")
+        else:
+            print(f"    - Target Achieved! Expected Surplus   : {abs(gap):,.2f} MW")
+            
+        print(f"    - Model Statistical Accuracy Score R²: {p_r2:.4f}")
+        print(f"    - Accelerated Combined Growth Speed   : {p_slope:,.2f} MW/year")  
+        
+        logging.info("Comprehensive analytical scoring matrix compiled and reported successfully.")
+        
+        # Return is placed at the absolute end of successful execution block
+        return True
 
-    # Predicted renewable capacity in 2030
-    future_2030,
-    
-    # Vision 2030 renewable target
-    vision_target,
-
-    # R² trend fitting score
-    trend_fit,
-
-    # Yearly renewable capacity table
-    yearly,
-
-    # Estimated yearly renewable growth
-    slope ):
-
-    # Function description
-    """
-    Evaluate renewable energy forecast results.
-    """
-
-    # Calculate achievement percentage
-
-    # Divide predicted capacity by Vision target
-    achievement_rate = (
-
-        # Predicted future renewable capacity
-        future_2030
-
-        # Divide by target capacity
-        / vision_target
-
-    # Convert to percentage
-    ) * 100
-
-    # Remaining MW needed to reach Vision target
-    gap = vision_target - future_2030
-
-    # Print evaluation title
-    print("\nForecast Evaluation")
-
-    # Print separator line
-    print("-" * 35)
-
-    # Display predicted renewable capacity
-    print(f"Predicted capacity in 2030: {future_2030:,.0f} MW")
-
-    # Display Vision 2030 target value
-    print(f"Vision 2030 target: {vision_target:,.0f} MW")
-
-    # Display target achievement percentage
-    print(f"Achievement rate: {achievement_rate:.2f}%")
-
-    # Display remaining MW gap
-    print(f"Gap from Vision 2030 target: {gap:,.0f} MW")
-
-    # Display R² score
-    print(f"Trend Fit (R²): {trend_fit:.2f}")
-
-    # Print yearly growth estimate
-
-    # Display estimated yearly growth
-    print(f"Estimated yearly growth: {slope:,.0f} MW/year")
-
-
-    # Display interpretation title
-    print("\nForecast Interpretation:")
-
-    # Explain model behavior
-    print("The model uses historical renewable energy growth to estimate future cumulative capacity.")
-
-    # Explain limited historical data issue
-    print("This forecast is approximate because it is based on limited historical data.")
-
-    # Find strongest growth year
-
-    # Get year with maximum added capacity
-    best_year = yearly.loc[
-
-        # Locate row with maximum capacity value
-        yearly['Capacity'].idxmax(),
-
-        # Select year column
-        'Year'
-    ]
-
-    # Find strongest growth value
-    best_val = yearly.loc[
-
-        # Locate row with maximum capacity value
-        yearly['Capacity'].idxmax(),
-
-        # Select capacity column
-        'Capacity'
-    ]
-
-    # Display strongest growth year
-    print(f"Highest annual growth occurred in {best_year} with {best_val:,.0f} MW added.")
-
-    # Check if target gap still exists
-    if gap > 0:
-
-        # Print below-target conclusion
-        print(f"\nSaudi Arabia may remain approximately {gap:,.0f} MW below the Vision 2030 target."
-        )
-
-    # Otherwise target is reached
-    else:
-
-        # Print target achievement conclusion
-        print("\nSaudi Arabia is projected to meet or exceed the Vision 2030 target.")
-
-    # Return evaluation metrics
-
-    # Return evaluation metrics
-    return {
-
-        # Store predicted capacity
-        "predicted_2030": future_2030,
-
-        # Store Vision target
-        "vision_target": vision_target,
-
-        # Store achievement percentage
-        "achievement_rate": achievement_rate,
-
-        # Store remaining gap
-        "gap": gap,
-
-        # Store trend fitting score
-        "trend_fit": trend_fit,
-
-        # Store yearly growth estimate
-        "slope": slope
-    }
+    except TypeError as e:
+        logging.error(f"Type structure failure within evaluate_dual_forecasts: {e}")
+        raise e
+    except Exception as e:
+        logging.error(f"An unexpected runtime error occurred during final reporting phase: {e}")
+        raise e
