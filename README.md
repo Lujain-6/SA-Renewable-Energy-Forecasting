@@ -91,7 +91,7 @@ Place the following datasets inside the `data/` folder:
 
 To spin up the web dashboard locally, run:
 
-streamlit run app.py
+`streamlit run app.py`
 
 ## Tech Stack
 
