@@ -108,7 +108,7 @@ with c3:
     st.info("**AI Insight:** Geographic summary identifying major project hosts across Saudi Arabian provinces.")
     
 with c4:
-    st.write("### Baseline Actual Capacity Forecast (Installed Only)")
+    st.write("### Actual Capacity Forecast (Installed Only)")
     fig4 = plt.figure(figsize=(8, 4.5))
     future_2030, vision_target, gap_val, r2_val, slope_val = plot_forecast_by_status(df_merged, status_type='Installed', forecast_until=2030)
     st.pyplot(plt.gcf())
