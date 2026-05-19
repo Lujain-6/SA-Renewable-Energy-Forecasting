@@ -8,7 +8,7 @@ import os
 from data_loader import load_data
 from preprocessing import clean_data1, clean_data2, merge
 from visualization import plot_yearly_growth, plot_solar_vs_wind, plot_regional_distribution, plot_forecast_by_status
-from evaluation import evaluate_forecast
+from evaluation import evaluate_dual_forecasts
 
 # Application page configuration
 st.set_page_config(page_title="Saudi Renewable Energy AI", layout="wide")
