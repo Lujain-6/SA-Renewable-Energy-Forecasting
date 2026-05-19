@@ -248,7 +248,7 @@ st.info("**AI Insight:** This model represents the future outlook by combining c
 st.write("---")
 st.subheader("🎯 Automated Vision 2030 Alignment Report")
 
-metrics = evaluate_forecast(future_2030, vision_target, trend_fit, yearly, slope)
+metrics = evaluate_dual_forecasts(future_2030, vision_target, trend_fit, yearly, slope)
 
 ec1, ec2, ec3 = st.columns(3)
 with ec1:
