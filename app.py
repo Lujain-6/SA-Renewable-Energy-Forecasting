@@ -87,7 +87,7 @@ with c1:
     plot_yearly_growth(d1_cleaned)
     st.pyplot(plt.gcf())
     plt.close(fig1)
-    st.info("**AI Insight:** Tracks historical established renewable installations globally to preserve model dimension integrity.")
+    st.info("**Chart Logic & Insight:** This multi-plot executes a comparative analysis by grouping data across both project status and energy types. The left bar chart tracks capacity metrics, while the right pie chart illustrates the total energy mix share proportions.")
     
 with c2:
     st.write("### Solar vs Wind Capacity Comparison")
@@ -105,7 +105,7 @@ with c3:
     plot_regional_distribution(df_merged)
     st.pyplot(plt.gcf())
     plt.close(fig3)
-    st.info("**AI Insight:** Geographic summary identifying major project hosts across Saudi Arabian provinces.")
+    st.info("**Chart Logic & Insight:** This horizontal stacked bar chart displays energy capacity across Saudi cities. To focus strictly on specific individual regions, residual 'Multi-city' entries are safely excluded, sorting the remaining locations by their operational assets.")
     
 with c4:
     st.write("### Actual Capacity Forecast (Installed Only)")
@@ -113,8 +113,8 @@ with c4:
     future_2030, vision_target, gap_val, r2_val, slope_val = plot_forecast_by_status(df_merged, status_type='Installed', forecast_until=2030)
     st.pyplot(plt.gcf())
     plt.close(fig4)
-    st.info("**Forecast Interpretation (Installed Only):** The model uses historical renewable energy growth to estimate future cumulative capacity. This forecast is approximate because it is based on limited historical data and a linear trend. Using installed projects only, the 2030 capacity may be below the Vision 2030 target.")
-
+    st.info("**Forecast Interpretation (Installed Track):** The model uses historical renewable energy growth to estimate future cumulative capacity. This forecast is approximate because it is based on limited historical data and a linear trend. Using installed projects only, the 2030 capacity may be about below the Vision 2030 target.")
+    
 # 5TH GRAPH
 st.write("---")
 st.write("### 🏁 Accelerated National Pipeline Forecast (Installed + Planned Projects)")
@@ -122,7 +122,7 @@ fig5_bottom = plt.figure(figsize=(10, 5))
 _ = plot_forecast_by_status(df_merged, status_type='Planned', forecast_until=2030)
 st.pyplot(plt.gcf())
 plt.close(fig5_bottom)
-st.info("**Forecast Interpretation (Combined Track):** After adding planned projects, the expected 2030 gap decreases. Planned projects may reduce the gap significantly to help fully align with the Vision 2030 national target line.")
+st.info("**Forecast Interpretation (Combined Track):** This predictive model evaluates the combined pipeline by running historical data alongside upcoming planned projects through a cumulative sum (`cumsum`). After adding planned assets, the expected 2030 gap decreases significantly to help fully align with the national target line.")
 
 # 6️⃣ User-Centric AI Model Evaluation Report Section
 st.write("---")
