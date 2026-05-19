@@ -87,7 +87,7 @@ with c1:
     plot_yearly_growth(d1_cleaned)
     st.pyplot(plt.gcf())
     plt.close(fig1)
-    st.info("**Chart Logic & Insight:** This multi-plot executes a comparative analysis by grouping data across both project status and energy types. The left bar chart tracks capacity metrics, while the right pie chart illustrates the total energy mix share proportions.")
+    st.info("**Chart Logic & Insight:** This visualization filters the dataset to include only operational (Installed) projects, grouping the filtered data by Year to aggregate and calculate the total sum of annual capacity additions (MW).")
     
 with c2:
     st.write("### Solar vs Wind Energy Comparison")
