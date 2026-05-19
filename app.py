@@ -92,15 +92,25 @@ if run_pipeline or True:
                 st.info("**AI Insight:** This geographic summary identifies which Saudi provinces host the largest renewable setups, pinpointing major investment hubs like Tabuk (NEOM) and Makkah regions.")
                 
             with c4:
-                st.write("### Future Renewable Energy Capacity Forecast (Vision 2030)")
+                st.write("### Baseline Actual Capacity Forecast (Installed Only)")
                 fig4 = plt.figure(figsize=(8, 4.5))
                 # Unpack predictive results directly from your team's function
-                future_2030, vision_target, trend_fit, yearly, slope = plot_forecast(df_merged, forecast_until=2030)
+                future_2030, vision_target, trend_fit, yearly, slope = plot_forecast_by_status(df_merged, status_type='Installed', forecast_until=2030)
                 st.pyplot(plt.gcf())
                 plt.close(fig4)
                 # 💡 User-Centric Explanation
                 st.info("**AI Insight:** Our Predictive Linear Regression model utilizes historical deployment velocity to project capacity up to the year 2030, drawing a direct mathematical comparison against official national targets.")
 
+            # 5TH GRAPH
+            st.write("---")
+            st.write("### 🏁 Accelerated National Pipeline Forecast (Installed + Planned Projects)")
+            fig5 = plt.figure(figsize=(10, 5))
+            _ = plot_forecast_by_status(df_merged, status_type='Planned', forecast_until=2030)
+            st.pyplot(plt.gcf())
+            plt.close(fig5)
+            # 💡 User-Centric Explanation
+            st.info("**AI Insight:** This model represents the future outlook by combining currently running facilities with announced upcoming projects. It shows the real statistical impact of our upcoming clean energy national pipeline towards the Vision 2030 target.")
+            
             # 6️⃣ User-Centric AI Model Evaluation Report Section
             st.write("---")
             st.subheader("🎯 Automated Vision 2030 Alignment Report")
@@ -217,13 +227,22 @@ with c3:
     st.info("**AI Insight:** Geographic summary identifying major project hosts across Saudi Arabian provinces.")
     
 with c4:
-    st.write("### Future Renewable Energy Capacity Forecast (Vision 2030)")
+    st.write("### Baseline Actual Capacity Forecast (Installed Only)")
     fig4 = plt.figure(figsize=(8, 4.5))
     # Unpack predictive results directly from your team's function
-    future_2030, vision_target, trend_fit, yearly, slope = plot_forecast(df_merged, forecast_until=2030)
+    future_2030, vision_target, trend_fit, yearly, slope = plot_forecast_by_status(df_merged, status_type='Installed', forecast_until=2030)
     st.pyplot(plt.gcf())
     plt.close(fig4)
     st.info("**AI Insight:** Our Predictive Linear Regression model projecting cumulative system capacity up to the year 2030.")
+
+# 5TH GRAPH
+st.write("---")
+st.write("### 🏁 Accelerated National Pipeline Forecast (Installed + Planned Projects)")
+fig5_bottom = plt.figure(figsize=(10, 5))
+_ = plot_forecast_by_status(df_merged, status_type='Planned', forecast_until=2030)
+st.pyplot(plt.gcf())
+plt.close(fig5_bottom)
+st.info("**AI Insight:** This model represents the future outlook by combining currently running facilities with announced upcoming projects. It shows the real statistical impact of our upcoming clean energy national pipeline towards the Vision 2030 target.")
 
 # 6️⃣ User-Centric AI Model Evaluation Report Section
 st.write("---")
