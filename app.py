@@ -76,7 +76,7 @@ with col3:
 st.write("---")
 
 # 5️⃣ Grid Layout for the Core Team Analytics & Global AI Forecasts
-st.subheader("📊 Team System Visualizations & AI Forecasts")
+st.subheader("📊 System Visualizations & AI Forecasts")
 st.write(f"Showing global system models alongside filtered real-time statistics for **{selected_city}** in **{selected_year}**.")
 
 # First row of charts: Growth and Solar vs Wind
