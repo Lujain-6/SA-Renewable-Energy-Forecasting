@@ -1,3 +1,5 @@
+import logging
+
 def evaluate_dual_forecasts(inst_metrics, plan_metrics):
     try:
         print("\n" + "=" * 70)
