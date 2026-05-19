@@ -113,7 +113,7 @@ with c4:
     future_2030, vision_target, gap_val, r2_val, slope_val = plot_forecast_by_status(df_merged, status_type='Installed', forecast_until=2030)
     st.pyplot(plt.gcf())
     plt.close(fig4)
-    st.info("**AI Insight:** Our Predictive Linear Regression model projecting cumulative system capacity up to the year 2030.")
+    st.info("**Forecast Interpretation (Installed Only):** The model uses historical renewable energy growth to estimate future cumulative capacity. This forecast is approximate because it is based on limited historical data and a linear trend. Using installed projects only, the 2030 capacity may be below the Vision 2030 target.")
 
 # 5TH GRAPH
 st.write("---")
@@ -122,7 +122,7 @@ fig5_bottom = plt.figure(figsize=(10, 5))
 _ = plot_forecast_by_status(df_merged, status_type='Planned', forecast_until=2030)
 st.pyplot(plt.gcf())
 plt.close(fig5_bottom)
-st.info("**AI Insight:** This model represents the future outlook by combining currently running facilities with announced upcoming projects. It shows the real statistical impact of our upcoming clean energy national pipeline towards the Vision 2030 target.")
+st.info("**Forecast Interpretation (Combined Track):** After adding planned projects, the expected 2030 gap decreases. Planned projects may reduce the gap significantly to help fully align with the Vision 2030 national target line.")
 
 # 6️⃣ User-Centric AI Model Evaluation Report Section
 st.write("---")
