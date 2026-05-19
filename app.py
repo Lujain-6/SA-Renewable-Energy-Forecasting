@@ -7,7 +7,7 @@ import os
 # 1️⃣ Import the exact functions from your team's files
 from data_loader import load_data
 from preprocessing import clean_data1, clean_data2, merge
-from visualization import plot_yearly_growth, plot_solar_vs_wind, plot_regional_distribution, plot_forecast
+from visualization import plot_yearly_growth, plot_solar_vs_wind, plot_regional_distribution, plot_forecast_by_status
 from evaluation import evaluate_forecast
 
 # Application page configuration
@@ -110,10 +110,8 @@ with c3:
 with c4:
     st.write("### Future Renewable Energy Capacity Forecast – Combined (Installed + Planned)")
 
-    # Generate the combined forecast chart: Installed + Planned
     plan_metrics = plot_forecast_by_status(df_merged, 'Planned', forecast_until=2030)
 
-    # Display the saved combined forecast image
     st.image(
         "output_forecast_planned.png",
         caption="Combined Forecast: Installed + Planned Renewable Energy Capacity toward Vision 2030",
@@ -124,28 +122,13 @@ with c4:
         "**AI Insight:** This chart shows the combined forecast using both installed renewable energy capacity "
         "and planned future projects to estimate progress toward the Vision 2030 target."
     )
-
-# 6️⃣ User-Centric AI Model Evaluation Report Section
-st.write("---")
-st.subheader("🎯 Automated Vision 2030 Alignment Report")
-
-metrics = evaluate_forecast(future_2030, vision_target, trend_fit, yearly, slope)
-
-ec1, ec2, ec3 = st.columns(3)
-with ec1:
-    st.success(f"**Model Trend Fit (R² Score):** {metrics['trend_fit']:.4f}")
-with ec2:
-    if metrics['gap'] > 0:
-        st.warning(f"**Projected Vision Gap:** {int(metrics['gap']):,} MW remaining")
-    else:
-        st.success("**Target Met or Exceeded!**")
-with ec3:
-    st.metric(label="Target Achievement Rate", value=f"{metrics['achievement_rate']:.2f}%")
-    
 # 7️⃣ Dynamic Interacted Dataframe Display at the bottom
 st.write("---")
 st.subheader(f"📋 Dataset Preview: {selected_city} ({selected_year})")
 if total_projects > 0:
     st.dataframe(df_filtered, use_container_width=True)
 else:
-    st.warning(f"No projects found in the dataset for the selected combination: {selected_city} in {selected_year}.")
+    st.warning(
+        f"No projects found in the dataset for the selected combination: "
+        f"{selected_city} in {selected_year}."
+    )
