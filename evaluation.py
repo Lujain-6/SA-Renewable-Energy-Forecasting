@@ -41,3 +41,16 @@ def evaluate_dual_forecasts(inst_metrics, plan_metrics):
     except Exception as e:
         logging.error(f"An unexpected runtime error occurred during final reporting phase: {e}")
         raise e
+# evaluate function for app.py
+def evaluate_forecast(future_2030, vision_target, gap_val, r2_val):
+    try:
+        achievement_rate = (future_2030 / vision_target) * 100 if vision_target > 0 else 0
+        metrics = {
+            'trend_fit': r2_val,
+            'gap': gap_val if gap_val > 0 else 0,
+            'achievement_rate': achievement_rate
+        }
+        return metrics
+    except Exception as e:
+        logging.error(f"Error in evaluate_forecast calculation for app: {e}")
+        raise e
