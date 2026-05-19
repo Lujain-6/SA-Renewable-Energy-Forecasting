@@ -82,7 +82,7 @@ st.write(f"Showing global system models alongside filtered real-time statistics 
 # First row of charts: Growth and Solar vs Wind
 c1, c2 = st.columns(2)
 with c1:
-    st.write("### Yearly Renewable Growth (Installed)")
+    st.write("### Saudi Arabia – Yearly Renewable Energy Growth (Installed Projects)")
     fig1 = plt.figure(figsize=(8, 4.5))
     plot_yearly_growth(d1_cleaned)
     st.pyplot(plt.gcf())
@@ -90,7 +90,7 @@ with c1:
     st.info("**Chart Logic & Insight:** This multi-plot executes a comparative analysis by grouping data across both project status and energy types. The left bar chart tracks capacity metrics, while the right pie chart illustrates the total energy mix share proportions.")
     
 with c2:
-    st.write("### Solar vs Wind Capacity Comparison")
+    st.write("### Solar vs Wind Energy Comparison")
     fig2 = plt.figure(figsize=(8, 4.5))
     plot_solar_vs_wind(df_merged)
     st.pyplot(plt.gcf())
@@ -100,7 +100,7 @@ with c2:
 # Second row of charts: Regional and Vision 2030 AI Forecast
 c3, c4 = st.columns(2)
 with c3:
-    st.write("### Regional Project Distribution")
+    st.write("### Regional Renewable Energy Distribution (Installed vs Planned)")
     fig3 = plt.figure(figsize=(8, 4.5))
     plot_regional_distribution(df_merged)
     st.pyplot(plt.gcf())
@@ -108,7 +108,7 @@ with c3:
     st.info("**Chart Logic & Insight:** This horizontal stacked bar chart displays energy capacity across Saudi cities. To focus strictly on specific individual regions, residual 'Multi-city' entries are safely excluded, sorting the remaining locations by their operational assets.")
     
 with c4:
-    st.write("### Actual Capacity Forecast (Installed Only)")
+    st.write("### Future Renewable Energy Capacity Forecast – Installed Baseline")
     fig4 = plt.figure(figsize=(8, 4.5))
     future_2030, vision_target, gap_val, r2_val, slope_val = plot_forecast_by_status(df_merged, status_type='Installed', forecast_until=2030)
     st.pyplot(plt.gcf())
@@ -117,7 +117,7 @@ with c4:
     
 # 5TH GRAPH
 st.write("---")
-st.write("### 🏁 Accelerated National Pipeline Forecast (Installed + Planned Projects)")
+st.write("### Future Renewable Energy Capacity Forecast – Combined (Installed + Planned)")
 fig5_bottom = plt.figure(figsize=(10, 5))
 _ = plot_forecast_by_status(df_merged, status_type='Planned', forecast_until=2030)
 st.pyplot(plt.gcf())
