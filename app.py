@@ -4,17 +4,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-# 1️⃣ Import the exact functions from your team's files
+# Import the exact functions from your team's files
 from data_loader import load_data
 from preprocessing import clean_data1, clean_data2, merge
-from visualization import plot_yearly_growth, plot_solar_vs_wind, plot_regional_distribution, plot_forecast
+from visualization import plot_yearly_growth, plot_solar_vs_wind, plot_regional_distribution, plot_forecast_by_status
 from evaluation import evaluate_forecast
 
 # Application page configuration
-st.set_page_config(page_title="Saudi Renewable Energy AI", page_icon="🇸🇦", layout="wide")
+st.set_page_config(page_title="Saudi Renewable Energy AI", layout="wide")
 
-st.title("🇸🇦 Saudi Arabia Renewable Energy Forecasting Platform")
-st.subheader("Automated MLOps Production Dashboard Linked directly to main.py scripts")
+st.title("Saudi Arabia Renewable Energy Forecasting Platform")
+st.subheader("An interactive AI-driven MLOps dashboard analyzing and forecasting Saudi Arabia's Vision 2030 renewable energy targets.")
 
 st.write("---")
 
