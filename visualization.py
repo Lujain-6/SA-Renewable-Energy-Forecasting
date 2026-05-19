@@ -1,3 +1,4 @@
+import logging
 # Generate Yearly Capacity Growth Bar Chart
 def plot_yearly_growth(df_raw):
     # Filter the dataset to include only operational (Installed) projects
