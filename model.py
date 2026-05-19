@@ -1,3 +1,7 @@
+import logging
+import time
+from sklearn.linear_model import LinearRegression
+
 # Train the analytical forecasting regression model
 def train_renewable_model(X, y):
     logging.info("Training Linear Regression model...")
