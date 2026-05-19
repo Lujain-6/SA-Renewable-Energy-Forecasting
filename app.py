@@ -18,10 +18,6 @@ st.subheader("An interactive AI-driven MLOps dashboard analyzing and forecasting
 
 st.write("---")
 
-# Sidebar dashboard control panel
-st.sidebar.header("🛠️ Pipeline Controller")
-run_pipeline = st.sidebar.button("🚀 Run Live AI Pipeline")
-
 # Load and clean the raw data using team's functions (Runs once to keep app fast)
 try:
     data1_raw, data2_raw = load_data()
