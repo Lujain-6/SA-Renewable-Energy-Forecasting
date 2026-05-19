@@ -95,7 +95,7 @@ with c2:
     plot_solar_vs_wind(df_merged)
     st.pyplot(plt.gcf())
     plt.close(fig2)
-    st.info("**AI Insight:** Global breakdown comparing total capacity distribution between Solar and Wind projects.")
+    st.info("**Chart Logic & Insight:** This multi-plot executes a comparative analysis by grouping data across both project status and energy types. The left bar chart tracks capacity metrics, while the right pie chart illustrates the total energy mix share proportions.")
     
 # Second row of charts: Regional and Vision 2030 AI Forecast
 c3, c4 = st.columns(2)
