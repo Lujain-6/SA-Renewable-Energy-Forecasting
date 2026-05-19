@@ -1,5 +1,5 @@
 # This library provides simple and efficient tools for predictive data analysis
-!pip install scikit-learn
+#!pip install scikit-learn
 
 # pytest: A framework to write and run automated unit tests for our code functions.
 !pip install pytest
