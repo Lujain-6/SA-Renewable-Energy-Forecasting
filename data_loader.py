@@ -2,7 +2,7 @@
 #!pip install scikit-learn
 
 # pytest: A framework to write and run automated unit tests for our code functions.
-!pip install pytest
+#!pip install pytest
 
 import os
 import time
