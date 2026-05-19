@@ -108,13 +108,22 @@ with c3:
     st.info("**AI Insight:** Geographic summary identifying major project hosts across Saudi Arabian provinces.")
     
 with c4:
-    st.write("### Future Renewable Energy Capacity Forecast (Vision 2030)")
-    fig4 = plt.figure(figsize=(8, 4.5))
-    # Unpack predictive results directly from your team's function
-    future_2030, vision_target, trend_fit, yearly, slope = plot_forecast(df_merged, forecast_until=2030)
-    st.pyplot(plt.gcf())
-    plt.close(fig4)
-    st.info("**AI Insight:** Our Predictive Linear Regression model projecting cumulative system capacity up to the year 2030.")
+    st.write("### Future Renewable Energy Capacity Forecast – Combined (Installed + Planned)")
+
+    # Generate the combined forecast chart: Installed + Planned
+    plan_metrics = plot_forecast_by_status(df_merged, 'Planned', forecast_until=2030)
+
+    # Display the saved combined forecast image
+    st.image(
+        "output_forecast_planned.png",
+        caption="Combined Forecast: Installed + Planned Renewable Energy Capacity toward Vision 2030",
+        use_container_width=True
+    )
+
+    st.info(
+        "**AI Insight:** This chart shows the combined forecast using both installed renewable energy capacity "
+        "and planned future projects to estimate progress toward the Vision 2030 target."
+    )
 
 # 6️⃣ User-Centric AI Model Evaluation Report Section
 st.write("---")
