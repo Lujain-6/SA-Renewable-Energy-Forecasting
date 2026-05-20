@@ -60,16 +60,16 @@ def run_all_convergence_tests(metrics_installed, metrics_planned):
     """
     logging.info("Initializing analytical convergence suite...")
     try:
-        # Step 1: Execute the gap reduction validity check
+        # Execute the gap reduction validity check
         test_gap_convergence(metrics_installed, metrics_planned)
         
-        # Step 2: Validate the linear trend statistical metrics
+        # Validate the linear trend statistical metrics
         test_model_stability_convergence(metrics_installed, metrics_planned)
         
-        # Step 3: Confirm acceleration in annual installation speed
+        # Confirm acceleration in annual installation speed
         test_growth_rate_acceleration(metrics_installed, metrics_planned)
         
-        # Print an formatted executive confirmation block upon complete success
+        # Print a formatted executive confirmation block upon complete success
         print("\n" + "=" * 60)
         print("ALL CONVERGENCE TESTS PASSED SUCCESSFULLY!")
         print("=" * 60)
@@ -85,6 +85,6 @@ def run_all_convergence_tests(metrics_installed, metrics_planned):
         logging.error(f"Convergence Test Failure: {e}")
         raise e
     except Exception as e:
-        # Fallback block to capture completely unhandled operational errors (e.g., TypeErrors)
+        # Fallback block to capture completely unhandled operational errors
         logging.error(f"Unexpected error encountered during convergence test runtime: {e}")
         raise e
