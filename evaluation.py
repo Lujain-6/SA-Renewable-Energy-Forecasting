@@ -36,7 +36,6 @@ def evaluate_dual_forecasts(inst_metrics, plan_metrics):
 
         print("=" * 70)
 
-        logging.info("Final dual forecast evaluation report with forecast interpretation generated successfully.")
 
     except Exception as e:
         logging.error(f"An unexpected runtime error occurred during final reporting phase: {e}")
