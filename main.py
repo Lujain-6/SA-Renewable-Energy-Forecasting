@@ -7,6 +7,8 @@ from evaluation import evaluate_dual_forecasts
 
 def main():
     try:
+        logging.info("Starting Renewable Energy Growth processing and forecasting pipeline...")
+        
         # Load Data
         data1, data2 = load_data()
         
@@ -33,10 +35,9 @@ def main():
         # Dual Forecast Evaluation
         evaluate_dual_forecasts(inst_metrics, plan_metrics)
         
-        # Model Convergence Tests
-        print("\n--- Running Model Convergence & Stability Tests ---")
-        test_model_convergence(df_merged, status_type='Installed')
-        test_model_convergence(df_merged, status_type='Planned')
+        # Run Complete Model Convergence Suite
+        print("\n--- Running Complete Model Convergence Suite ---")
+        run_all_convergence_tests(inst_metrics, plan_metrics)
         
         logging.info("Pipeline execution completed successfully.")
         
