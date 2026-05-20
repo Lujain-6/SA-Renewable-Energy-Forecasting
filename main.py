@@ -6,36 +6,42 @@ from visualization import plot_yearly_growth, plot_solar_vs_wind, plot_regional_
 from evaluation import evaluate_dual_forecasts
 
 def main():
-    logging.info("Starting Renewable Energy Analysis Pipeline...")
-    start_total = time.time()
-    
     try:
-        raw_data1, raw_data2 = load_data()
-        cleaned1 = clean_data1(raw_data1)
-        cleaned2 = clean_data2(raw_data2)
-        df_final = merge(cleaned1, cleaned2)
+        # Load Data
+        data1, data2 = load_data()
         
-        if df_final is None or df_final.empty:
-            raise ValueError("Merged dataframe is empty. Cannot proceed.")
+        # Clean Data
+        logging.info("Starting data cleaning phase...")
+        data1_clean = clean_data1(data1)
+        data2_clean = clean_data2(data2)
         
-        logging.info("Generating analytical visualization dashboards...")
-        plot_yearly_growth(df_final)
-        plot_solar_vs_wind(df_final)
-        plot_regional_distribution(df_final)
+        # Merge Data
+        logging.info("Merging datasets and removing duplicates...")
+        df_merged = merge(data1_clean, data2_clean)
         
-        # Dynamic calls: 
-        # First call evaluates current actual capacity trend
-        inst_metrics = plot_forecast_by_status(df_final, status_type='Installed', forecast_until=2030)
-        # Second call now evaluates the global combined pipeline (Installed + Planned)
-        plan_metrics = plot_forecast_by_status(df_final, status_type='Planned', forecast_until=2030)
+        # Exploratory Data Analysis (Visualizations)
+        print("\n--- Generating Exploratory Analysis Charts ---")
+        plot_yearly_growth(df_merged)
+        plot_solar_vs_wind(df_merged)
+        plot_regional_distribution(df_merged)
         
+        # Model Training and Forecasting until 2030
+        print("\n--- Training Models and Calculating Vision 2030 Forecasts ---")
+        inst_metrics = plot_forecast_by_status(df_merged, status_type='Installed', forecast_until=2030)
+        plan_metrics = plot_forecast_by_status(df_merged, status_type='Planned', forecast_until=2030)
+        
+        # Dual Forecast Evaluation
         evaluate_dual_forecasts(inst_metrics, plan_metrics)
         
-        total_time = time.time() - start_total
-        logging.info(f"Analysis Completed Successfully in {total_time:.2f} seconds")
+        # Model Convergence Tests
+        print("\n--- Running Model Convergence & Stability Tests ---")
+        test_model_convergence(df_merged, status_type='Installed')
+        test_model_convergence(df_merged, status_type='Planned')
+        
+        logging.info("Pipeline execution completed successfully.")
+        
     except Exception as e:
-        logging.critical(f"Pipeline crashed during execution workflow: {e}")
-        raise e
+        logging.critical(f"Pipeline execution failed due to an error: {e}")
 
 if __name__ == "__main__":
     main()
