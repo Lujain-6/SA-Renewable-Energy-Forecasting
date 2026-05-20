@@ -6,6 +6,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 from sklearn.linear_model import LinearRegression
+from model import train_renewable_model
 
 # Generate Yearly Capacity Growth Bar Chart
 def plot_yearly_growth(df_raw):
