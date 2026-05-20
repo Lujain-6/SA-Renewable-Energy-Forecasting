@@ -15,12 +15,12 @@ def clean_data1(data1):
             if idx not in data1.index:
                 logging.warning(f"Index {idx} not found in Dataset 1. Skipping alignment.")
         # Check specific row indices and manually update or correct the city names if they exist        
-        if 2 in data1.index: data1.loc[2, 'City'] = 'Jeddah'
-        if 18 in data1.index: data1.loc[18, 'City'] = 'Jeddah'
-        if 29 in data1.index: data1.loc[29, 'City'] = 'Rabigh'
-        if 56 in data1.index: data1.loc[56, 'City'] = 'Qurayyat'
-        if 24 in data1.index: data1.loc[24, 'City'] = 'Multi-city'
-        if 66 in data1.index: data1.loc[66, 'City'] = 'Multi-city'
+        data1.loc[2, 'City'] = 'Jeddah'
+        data1.loc[18, 'City'] = 'Jeddah'
+        data1.loc[29, 'City'] = 'Rabigh'
+        data1.loc[56, 'City'] = 'Qurayyat'
+        data1.loc[24, 'City'] = 'Multi-city'
+        data1.loc[66, 'City'] = 'Multi-city'
         
         # Standardize city names naming syntax
         mapping = {
