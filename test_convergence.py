@@ -1,3 +1,4 @@
+import logging
 def test_gap_convergence(inst_metrics, plan_metrics):
     """
     Verify that adding planned future projects logically reduces the 
