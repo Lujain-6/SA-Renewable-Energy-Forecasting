@@ -4,6 +4,7 @@ from data_loader import load_data
 from preprocessing import clean_data1, clean_data2, merge
 from visualization import plot_yearly_growth, plot_solar_vs_wind, plot_regional_distribution, plot_forecast_by_status
 from evaluation import evaluate_dual_forecasts
+from test_convergence import run_all_convergence_tests
 
 def main():
     try:
