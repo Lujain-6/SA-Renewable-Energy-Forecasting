@@ -6,7 +6,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 from sklearn.linear_model import LinearRegression
-from model import train_renewable_model
 
 # Generate Yearly Capacity Growth Bar Chart
 def plot_yearly_growth(df_raw):
@@ -80,10 +79,6 @@ def plot_solar_vs_wind(df_raw):
         plt.tight_layout()
         plt.savefig('output_solar_vs_wind.png', dpi=150)
         plt.show()
-        
-        # Log a message confirming the chart image has been successfully created
-        logging.info("Chart saved successfully: output_solar_vs_wind.png")
-        logging.info("Solar vs wind comparison visualization pipeline completed successfully.")
 
     except TypeError as e:
         logging.error(f"Data type validation error in plot_solar_vs_wind: {e}")
@@ -101,8 +96,6 @@ def plot_regional_distribution(df_raw):
         # Guard rail: Verify input argument is a valid pandas DataFrame
         if not isinstance(df_raw, pd.DataFrame):
             raise TypeError("Input df_raw must be a valid pandas DataFrame.")
-
-        logging.info("Starting regional energy distribution analysis and chart generation...")
 
         # Guard rail: Verify required analysis columns exist in the DataFrame
         required_cols = ['City', 'Installed / Planned', 'Capacity']
@@ -137,9 +130,6 @@ def plot_regional_distribution(df_raw):
         plt.savefig('output_regional_distribution.png', dpi=150)
         plt.show()
         
-        # Log a message confirming the chart image has been successfully created
-        logging.info("Chart saved successfully: output_regional_distribution.png")
-        
         # Calculate the total capacity per city by summing up across both Installed and Planned categories
         total_capacity = regional.sum(axis=1).sort_values(ascending=False)
         
@@ -148,8 +138,6 @@ def plot_regional_distribution(df_raw):
         for i, (city, val) in enumerate(total_capacity.head(3).items(), 1):
             print(f"   {i}. {city}: {val:,.0f} MW")
             
-        logging.info("Regional distribution chart and textual summary generated successfully.")
-
     except TypeError as e:
         logging.error(f"Data type validation error in plot_regional_distribution: {e}")
         raise e
@@ -168,8 +156,6 @@ def plot_forecast_by_status(df_raw, status_type, forecast_until=2030):
 
         if status_type not in ['Installed', 'Planned']:
             raise ValueError("status_type must be either 'Installed' or 'Planned'.")
-
-        logging.info(f"Starting forecasting process specifically for '{status_type}' track...")
 
         required_cols = ['Installed / Planned', 'Year', 'Capacity']
         for col in required_cols:
@@ -279,12 +265,6 @@ def plot_forecast_by_status(df_raw, status_type, forecast_until=2030):
         output_filename = f'output_forecast_{status_type.lower()}.png'
         plt.savefig(output_filename, dpi=150)
         plt.show()
-
-        logging.info(f"Forecasting completed and cumulative asset saved: {output_filename}")
-        logging.info(f"{status_type} forecasted 2030 capacity: {future_2030:,.2f} MW")
-        logging.info(f"{status_type} 2030 gap from Vision target: {gap_2030:,.2f} MW")
-        logging.info(f"{status_type} R2 score: {r2_score:.4f}")
-        logging.info(f"{status_type} estimated yearly growth: {yearly_growth:,.2f} MW/year")
 
         return future_2030, vision_target, gap_2030, r2_score, yearly_growth
 
