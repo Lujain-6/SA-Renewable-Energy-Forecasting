@@ -147,9 +147,9 @@ st.markdown("### 💡 Forecast Interpretation")
 st.info(f"""
 * The model uses historical renewable energy growth to estimate future cumulative capacity.
 * This forecast is approximate because it is based on limited historical data and a linear trend.
-* Using installed projects only, the 2030 capacity may be about **{i_gap:,.0f} MW** below the Vision 2030 target.
+* Using installed projects only, the 2030 capacity may be about **{gap_val:,.0f} MW** below the Vision 2030 target.
 * After adding planned projects, the expected 2030 gap decreases to about **{p_gap:,.0f} MW**.
-* Planned projects may reduce the gap by about **{(i_gap - p_gap):,.0f} MW**.
+* Planned projects may reduce the gap by about **{(gap_val - p_gap):,.0f} MW**.
 """)
 
 # 7️⃣ Dynamic Interacted Dataframe Display at the bottom
