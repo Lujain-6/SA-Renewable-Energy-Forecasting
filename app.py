@@ -126,7 +126,7 @@ st.info("**Forecast Interpretation (Combined Track):** This predictive model eva
 
 # 6️⃣ User-Centric AI Model Evaluation Report Section
 st.write("---")
-st.subheader("🎯 Automated Vision 2030 Alignment Report")
+st.subheader("🎯 Automated Vision 2030 Alignment Report (Installed)")
 
 # call the evaluate function
 metrics = evaluate_forecast(future_2030, vision_target, gap_val, r2_val)
