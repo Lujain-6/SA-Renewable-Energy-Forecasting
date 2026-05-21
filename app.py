@@ -122,7 +122,7 @@ fig5_bottom = plt.figure(figsize=(10, 5))
 _ = plot_forecast_by_status(df_merged, status_type='Planned', forecast_until=2030)
 st.pyplot(plt.gcf())
 plt.close(fig5_bottom)
-st.info("**Forecast Interpretation (Combined Track):** This predictive model evaluates the combined pipeline by running historical data alongside upcoming planned projects through a cumulative sum (`cumsum`). After adding planned assets, the expected 2030 gap decreases significantly to help fully align with the national target line.")
+st.info("**Forecast Interpretation (Combined Track):** This predictive model evaluates the combined pipeline by running historical data alongside upcoming planned projects through a cumulative sum. After adding planned assets, the expected 2030 gap decreases significantly to help fully align with the national target line.")
 
 # 6️⃣ User-Centric AI Model Evaluation Report Section
 st.write("---")
