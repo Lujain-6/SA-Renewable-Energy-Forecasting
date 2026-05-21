@@ -119,7 +119,7 @@ with c4:
 st.write("---")
 st.write("### Future Renewable Energy Capacity Forecast – Combined (Installed + Planned)")
 fig5_bottom = plt.figure(figsize=(10, 5))
-_ = plot_forecast_by_status(df_merged, status_type='Planned', forecast_until=2030)
+p_2030, p_target, p_gap, p_r2, p_slope = plot_forecast_by_status(df_merged, status_type='Planned', forecast_until=2030)
 st.pyplot(plt.gcf())
 plt.close(fig5_bottom)
 st.info("**Forecast Interpretation (Combined Track):** This predictive model evaluates the combined pipeline by running historical data alongside upcoming planned projects through a cumulative sum. After adding planned assets, the expected 2030 gap decreases significantly to help fully align with the national target line.")
@@ -129,7 +129,7 @@ st.write("---")
 st.subheader("🎯 Automated Vision 2030 Alignment Report")
 
 # call the evaluate function
-metrics = evaluate_forecast(future_2030, vision_target, gap_val, r2_val)
+metrics = evaluate_forecast(p_2030, p_target, p_gap, p_r2)
 
 ec1, ec2, ec3 = st.columns(3)
 with ec1:
@@ -141,7 +141,17 @@ with ec2:
         st.success("**Target Met or Exceeded!**")
 with ec3:
     st.metric(label="Target Achievement Rate", value=f"{metrics['achievement_rate']:.2f}%")
-    
+
+# Clear and simple forecasting explanation for the user
+st.markdown("### 💡 Forecast Interpretation")
+st.info(f"""
+* The model uses historical renewable energy growth to estimate future cumulative capacity.
+* This forecast is approximate because it is based on limited historical data and a linear trend.
+* Using installed projects only, the 2030 capacity may be about **{i_gap:,.0f} MW** below the Vision 2030 target.
+* After adding planned projects, the expected 2030 gap decreases to about **{p_gap:,.0f} MW**.
+* Planned projects may reduce the gap by about **{(i_gap - p_gap):,.0f} MW**.
+""")
+
 # 7️⃣ Dynamic Interacted Dataframe Display at the bottom
 st.write("---")
 st.subheader(f"📋 Dataset Preview: {selected_city} ({selected_year})")
