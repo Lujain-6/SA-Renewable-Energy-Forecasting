@@ -129,7 +129,7 @@ st.write("---")
 st.subheader("🎯 Automated Vision 2030 Alignment Report (Installed)")
 
 # call the evaluate function
-metrics = evaluate_forecast(future_2030, vision_target, gap_val, r2_val)
+metrics = evaluate_forecast(p_2030, p_target, p_gap, p_r2)
 
 ec1, ec2, ec3 = st.columns(3)
 with ec1:
