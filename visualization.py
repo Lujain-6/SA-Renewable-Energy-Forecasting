@@ -116,7 +116,7 @@ def plot_regional_distribution(df_raw):
         regional = regional.drop(index='Multi-city', errors='ignore')
         
         # Sort the regions in ascending order based on the 'Installed' capacity for better visualization alignment
-       if 'Installed' in regional.columns:
+        if 'Installed' in regional.columns:
             regional = regional.sort_values(by='Installed', ascending=True)
         else:
             regional = regional.sort_values(by=regional.columns[0], ascending=True)
