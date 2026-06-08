@@ -12,9 +12,10 @@ from model import train_renewable_model
 def plot_yearly_growth(df_raw):
     # Filter the dataset to include only operational (Installed) projects
     installed = df_raw[df_raw['Installed / Planned'] == 'Installed']
-    
+
     # Group the filtered data by Year and calculate the total sum of capacity for each year
     yearly = installed.groupby('Year')['Capacity'].sum().reset_index()
+    yearly['Year'] = yearly['Year'].astype(int)
     
     # Initialize the plot figure and axis with a custom size
     fig, ax = plt.subplots(figsize=(10, 5))
@@ -28,6 +29,7 @@ def plot_yearly_growth(df_raw):
     ax.set_title('Saudi Arabia – Yearly Renewable Energy Growth (Installed Projects)')
     
     # Format the X-axis to display years as clean, non-decimal integer values
+    ax.set_xticks(yearly['Year'])
     ax.xaxis.set_major_locator(mticker.MaxNLocator(integer=True))
     ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f'{int(x)}'))
     
@@ -111,11 +113,18 @@ def plot_regional_distribution(df_raw):
         regional = regional.drop(index='Multi-city', errors='ignore')
         
         # Sort the regions in ascending order based on the 'Installed' capacity for better visualization alignment
-        regional = regional.sort_values(by='Installed', ascending=True)
-        
+       if 'Installed' in regional.columns:
+            regional = regional.sort_values(by='Installed', ascending=True)
+        else:
+            regional = regional.sort_values(by=regional.columns[0], ascending=True)
+            
         # Initialize the plot figure and axis with a suitable size for horizontal bars
         fig, ax = plt.subplots(figsize=(11, 7))
-        
+
+        # Dynamically assign colors based on what columns actually exist
+        color_map = {'Installed': '#2ecc71', 'Planned': '#f39c12'}
+        current_colors = [color_map.get(col, '#3498db') for col in regional.columns]
+
         # Generate a horizontal stacked bar chart with custom green and orange colors
         regional.plot(kind='barh', stacked=True, ax=ax, color=['#2ecc71', '#f39c12'])
         
