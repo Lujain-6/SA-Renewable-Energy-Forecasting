@@ -100,8 +100,11 @@ if total_projects > 0:
             cleaned_input = d1_dynamic.groupby('Year', as_index=False)['Capacity'].sum()
             cleaned_input['Year'] = cleaned_input['Year'].astype(int)
             cleaned_input['Installed / Planned'] = 'Installed' # Keep the column intact for the backend function
+
+            # Clear the matplotlib memory to prevent chart overlapping
+            plt.clf()
             
-            # Call your original function with the perfectly grouped data
+            # Call the original function with the perfectly grouped data
             plot_yearly_growth(cleaned_input)
             st.pyplot(plt.gcf())
             plt.close(fig1)
