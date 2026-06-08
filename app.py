@@ -35,7 +35,7 @@ except Exception as e:
     st.error(f"Backend Pipeline Initialization Error: {str(e)}")
     st.stop()
 
-# 🛠️ SIDEBAR CONTROLS: Dynamic User Selection (Interactive Filters)
+# SIDEBAR CONTROLS: Dynamic User Selection (Interactive Filters)
 st.sidebar.header("🕹️ Interactive User Controls")
 st.sidebar.write("Select filters to customize the data preview and KPIs:")
 
@@ -102,7 +102,8 @@ if total_projects > 0:
 
             # Clear the matplotlib memory to prevent chart overlapping
             plt.clf()
-
+            plt.close('all')
+            
             # Create a new figure
             fig1 = plt.figure(figsize=(8, 4.5))
             
