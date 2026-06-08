@@ -27,6 +27,10 @@ def plot_yearly_growth(df_raw):
     ax.set_xlabel('Year')
     ax.set_ylabel('Annual Capacity Added (MW)')
     ax.set_title('Saudi Arabia – Yearly Renewable Energy Growth (Installed Projects)')
+
+    # Explicitly tell matplotlib to only label the unique years present in the current dataframe
+    ax.set_xticks(yearly['Year'])
+    ax.set_xticklabels(yearly['Year'].astype(str))
     
     # Format the X-axis to display years as clean, non-decimal integer values
     ax.set_xticks(yearly['Year'])
