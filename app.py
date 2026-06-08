@@ -88,21 +88,29 @@ if total_projects > 0:
     c1, c2 = st.columns(2)
     with c1:
         st.write("### Saudi Arabia – Yearly Renewable Energy Growth (Installed Projects)")
-        fig1 = plt.figure(figsize=(8, 4.5))
         
-        # Extract and filter the data directly from df_filtered which already contains the exact city and year selections, plus the required columns!
-        d1_dynamic = df_filtered.copy()
+        # Take the filtered dataframe and extract rows that are strictly 'Installed'
+        d1_dynamic = df_filtered[df_filtered['Installed / Planned'] == 'Installed'].copy() if 'Installed / Planned' in df_filtered.columns else df_filtered.copy()
 
-        # Check if there are active rows matching the 'Installed' track for this selection
-        has_installed_rows = len(d1_dynamic[d1_dynamic['Installed / Planned'] == 'Installed']) > 0
-
-        if has_installed_rows:
-            plot_yearly_growth(d1_dynamic)
+        # Check if this dynamic slice actually contains any rows to plot
+        if len(d1_dynamic) > 0 and d1_dynamic['Capacity'].sum() > 0:
+            fig1 = plt.figure(figsize=(8, 4.5))
+            
+            # Combine multi-project rows for the same year to fix duplicate X-axis labels
+            cleaned_input = d1_dynamic.groupby('Year', as_index=False)['Capacity'].sum()
+            cleaned_input['Year'] = cleaned_input['Year'].astype(int)
+            cleaned_input['Installed / Planned'] = 'Installed' # Keep the column intact for the backend function
+            
+            # Call your original function with the perfectly grouped data
+            plot_yearly_growth(cleaned_input)
             st.pyplot(plt.gcf())
+            plt.close(fig1)
             st.info("**Chart Logic & Insight:** This visualization filters the dataset to include only operational (Installed) projects, grouping the filtered data by Year to aggregate and calculate the total sum of annual capacity additions (MW).")
         else:
-            st.warning(f"No installed projects found for {selected_city} in {selected_year} to display growth chart.")
-        plt.close(fig1)
+            # Show a clean warning instead of an empty/blank plot grid
+            st.warning(f"📊 **No Active Installed Projects for {selected_city} ({selected_year}):** \n\n"
+                       f"There are currently no operational 'Installed' capacity entries registered in the dataset for this selection. "
+                       f"Please adjust the filters (e.g., select All Years or 2024) to view the region's active growth metrics.")
         
     with c2:
         st.write("### Solar vs Wind Energy Comparison")
