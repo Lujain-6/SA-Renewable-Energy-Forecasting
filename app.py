@@ -110,8 +110,19 @@ if total_projects > 0:
     with c3:
         st.write("### Regional Renewable Energy Distribution (Installed vs Planned)")
         fig3 = plt.figure(figsize=(8, 4.5))
-        plot_regional_distribution(df_filtered)
-        st.pyplot(plt.gcf())
+
+        # To handle citites that doesn't have both installed and planned data
+        try:
+            plot_regional_distribution(df_filtered)
+            st.pyplot(plt.gcf())
+        except KeyError as ke:
+            # Displays a clean, localized summary metric box when a column like 'Installed' is mathematically missing
+            st.info(f"📊 **Localized Capacity Breakdown for {selected_city} ({selected_year}):**\n\n"
+                    f"Currently, there are no 'Installed' baseline projects active for this dynamic selection. "
+                    f"The total combined pipeline consists strictly of **{int(total_current_capacity):,} MW** from upcoming **Planned** infrastructure assets.")
+        except Exception as e:
+            st.warning("Unable to render comparative regional distribution for this tight data slice.")
+        
         plt.close(fig3)
         st.info("**Chart Logic & Insight:** This horizontal stacked bar chart displays energy capacity across Saudi cities. To focus strictly on specific individual regions, residual 'Multi-city' entries are safely excluded, sorting the remaining locations by their operational assets.")
     
