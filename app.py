@@ -90,7 +90,7 @@ if total_projects > 0:
         st.write("### Saudi Arabia – Yearly Renewable Energy Growth (Installed Projects)")
         fig1 = plt.figure(figsize=(8, 4.5))
 
-        if len(d1_dynamic) > 0:
+        if len(d1_cleaned) > 0:
             plot_yearly_growth(d1_cleaned)
             st.pyplot(plt.gcf())
             st.info("**Chart Logic & Insight:** This visualization filters the dataset to include only operational (Installed) projects, grouping the filtered data by Year to aggregate and calculate the total sum of annual capacity additions (MW).")
