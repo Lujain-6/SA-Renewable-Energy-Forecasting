@@ -102,7 +102,6 @@ if total_projects > 0:
 
             # Clear the matplotlib memory to prevent chart overlapping
             plt.clf()
-            plt.close('all')
             
             # Create a new figure
             fig1 = plt.figure(figsize=(8, 4.5))
