@@ -88,14 +88,14 @@ if total_projects > 0:
     c1, c2 = st.columns(2)
     with c1:
         st.write("### Saudi Arabia – Yearly Renewable Energy Growth (Installed Projects)")
+         fig1 = plt.figure(figsize=(8, 4.5))
         
         # Take the filtered dataframe and extract rows that are strictly 'Installed'
         d1_dynamic = df_filtered[df_filtered['Installed / Planned'] == 'Installed'].copy() if 'Installed / Planned' in df_filtered.columns else df_filtered.copy()
 
         # Check if this dynamic slice actually contains any rows to plot
         if len(d1_dynamic) > 0 and d1_dynamic['Capacity'].sum() > 0:
-            fig1 = plt.figure(figsize=(8, 4.5))
-            
+           
             # Combine multi-project rows for the same year to fix duplicate X-axis labels
             cleaned_input = d1_dynamic.groupby('Year', as_index=False)['Capacity'].sum()
             cleaned_input['Year'] = cleaned_input['Year'].astype(int)
