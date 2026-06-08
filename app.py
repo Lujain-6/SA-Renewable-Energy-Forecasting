@@ -92,11 +92,11 @@ if total_projects > 0:
         if len(d1_filtered) > 0:
             plot_yearly_growth(d1_filtered)
             st.pyplot(plt.gcf())
+            st.info("**Chart Logic & Insight:** This visualization filters the dataset to include only operational (Installed) projects, grouping the filtered data by Year to aggregate and calculate the total sum of annual capacity additions (MW).")
         else:
             st.warning(f"No installed projects found for {selected_city} in {selected_year} to display growth chart.")
         plt.close(fig1)
-        st.info("**Chart Logic & Insight:** This visualization filters the dataset to include only operational (Installed) projects, grouping the filtered data by Year to aggregate and calculate the total sum of annual capacity additions (MW).")
-
+        
     with c2:
         st.write("### Solar vs Wind Energy Comparison")
         fig2 = plt.figure(figsize=(8, 4.5))
@@ -115,6 +115,7 @@ if total_projects > 0:
         try:
             plot_regional_distribution(df_filtered)
             st.pyplot(plt.gcf())
+            st.info("**Chart Logic & Insight:** This horizontal stacked bar chart displays energy capacity across Saudi cities. To focus strictly on specific individual regions, residual 'Multi-city' entries are safely excluded, sorting the remaining locations by their operational assets.")
         except KeyError as ke:
             # Displays a clean, localized summary metric box when a column like 'Installed' is mathematically missing
             st.info(f"📊 **Localized Capacity Breakdown for {selected_city} ({selected_year}):**\n\n"
@@ -124,8 +125,7 @@ if total_projects > 0:
             st.warning("Unable to render comparative regional distribution for this tight data slice.")
         
         plt.close(fig3)
-        st.info("**Chart Logic & Insight:** This horizontal stacked bar chart displays energy capacity across Saudi cities. To focus strictly on specific individual regions, residual 'Multi-city' entries are safely excluded, sorting the remaining locations by their operational assets.")
-    
+        
     with c4:
         st.write("### Future Renewable Energy Capacity Forecast – Installed Baseline")
         fig4 = plt.figure(figsize=(8, 4.5))
