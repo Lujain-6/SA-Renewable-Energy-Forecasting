@@ -126,7 +126,7 @@ if total_projects > 0:
                 st.pyplot(plt.gcf())
                 st.info("**Forecast Interpretation (Installed Track):** The model uses historical renewable energy growth to estimate future cumulative capacity. This forecast is approximate because it is based on limited historical data and a linear trend. Using installed projects only, the 2030 capacity may be about below the Vision 2030 target.")
                 has_installed_forecast = True
-            except Exceptiona as forecast_err:
+            except Exception as forecast_err:
                 st.error("⚠️ Cannot calculate linear forecast: The mathematical data matrix is singular (insufficient variation in historical points).")
                 has_installed_forecast = False
         else:
