@@ -33,7 +33,9 @@ def plot_yearly_growth(df_raw):
     ax.set_xticklabels(yearly['Year'].astype(str))
     
     # Format the X-axis to display years as clean, non-decimal integer values
-    ax.set_xticks(yearly['Year'])
+    unique_years = sorted(yearly['Year'].unique())
+    ax.set_xticks(unique_years)
+    ax.set_xticklabels([str(int(y)) for y in unique_years])
     ax.xaxis.set_major_locator(mticker.MaxNLocator(integer=True))
     ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f'{int(x)}'))
     
