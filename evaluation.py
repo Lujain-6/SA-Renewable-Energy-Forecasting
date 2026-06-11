@@ -1,5 +1,35 @@
 import logging
+import warnings # to enable automated system alerts
 
+logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Evaluates system operational health and triggers early warnings if performance drift or data anomalies are detected.
+def check_for_model_collapse(r2, estimated_yearly_growth):
+
+    print(f"=== System Health Check ===")
+    print(f"Current R² Score: {r2:.4f}")
+    print(f"Estimated Growth: {estimated_yearly_growth:.2f} MW/year")
+    print(f"===========================\n")
+
+    # 1. Performance Check: Trigger warning if R² drops below standard threshold (0.5)
+    if r2 < 0.5:
+        warnings.warn(
+            f"[CRITICAL WARNING] Potential Operational Drift Detected!\n"
+            f"The R² score ({r2:.4f}) has dropped below the predictive quality threshold (0.5).\n"
+            f"The model is publishing chaotic results or statistical noise.",
+            UserWarning
+        )
+        
+    # 2. Data Integrity Check: Trigger warning if estimated growth rate becomes negative
+    if estimated_yearly_growth < 0:
+        warnings.warn(
+            f"[DATA INTEGRITY WARNING] Negative Yearly Growth Detected ({estimated_yearly_growth:.2f} MW/year).\n"
+            f"Static CSV dataset might be outdated or real-world distribution changed.",
+            UserWarning
+        )
+        
+    return r2
+    
 def evaluate_dual_forecasts(inst_metrics, plan_metrics):
     try:
         print("\n" + "=" * 70)
@@ -35,7 +65,12 @@ def evaluate_dual_forecasts(inst_metrics, plan_metrics):
         print(f"   - Planned projects may reduce the gap by about {(i_gap - p_gap):,.0f} MW.")
 
         print("=" * 70)
-
+        # Trigger the automated monitoring system for both tracks
+        print("\n[Monitoring System Check - Installed Track]")
+        check_for_model_collapse(i_r2, i_slope)
+        
+        print("[Monitoring System Check - Combined Track]")
+        check_for_model_collapse(p_r2, p_slope)
 
     except Exception as e:
         logging.error(f"An unexpected runtime error occurred during final reporting phase: {e}")
