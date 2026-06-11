@@ -241,12 +241,11 @@ if total_projects > 0:
                 "The target alignment evaluation metrics cannot be displayed because the predictive model requires a broader historical time-series baseline to compute standard R² and Achievement rates for this localized region.")
 
 else:
-    
-    st.warning(f"No projects found in the dataset for the selected combination: {city_display} in {year_display}. Please adjust the filters to view visualizations.")
+    st.warning(f"No projects found in the dataset for the selected combination. Please adjust the filters to view visualizations.")
 
 # Dynamic Interacted Dataframe Display at the bottom
 st.write("---")
-st.subheader(f"📋 Dataset Preview: {city_display} ({year_display})")
+st.subheader(f"📋 Dataset Preview")
 if total_projects > 0:
     st.dataframe(df_filtered, use_container_width=True)
 else:
