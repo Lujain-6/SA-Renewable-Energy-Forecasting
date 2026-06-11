@@ -48,23 +48,29 @@ available_cities = sorted(df_merged['City'].dropna().unique().tolist())
 available_years = sorted(df_merged['Year'].dropna().unique().tolist())
 
 # Add an "All Cities" and "All Years" option for flexibility
-city_options = ["All Cities"] + available_cities
-year_options = ["All Years"] + [int(y) for y in available_years]
+city_options = available_cities
+year_options = [int(y) for y in available_years]
 
-selected_city = st.sidebar.selectbox("📍 Select City / Region:", city_options)
-selected_year = st.sidebar.selectbox("📅 Select Target Year:", year_options)
+# Convert years to integers for clean display
+year_options = [int(y) for y in available_years]
+
+# Using multiselect instead of selectbox for multiple selections
+selected_cities = st.sidebar.multiselect("📍 Select City / Region:", city_options, default=city_options)
+selected_years = st.sidebar.multiselect("📅 Select Target Years:", year_options, default=year_options)
 
 # Apply User Filters dynamically to the dataframe
 df_filtered = df_merged.copy()
 d1_filtered = d1_cleaned.copy()
 
-if selected_city != "All Cities":
-    df_filtered = df_filtered[df_filtered['City'] == selected_city]
-    d1_filtered = d1_filtered[d1_filtered['City'] == selected_city]
+# Filter by the list of selected cities (if the user unchecks everything, it clears the filter)
+if selected_cities:
+    df_filtered = df_filtered[df_filtered['City'].isin(selected_cities)]
+    d1_filtered = d1_filtered[d1_filtered['City'].isin(selected_cities)]
 
-if selected_year != "All Years":
-    df_filtered = df_filtered[df_filtered['Year'] == selected_year]
-    d1_filtered = d1_filtered[d1_filtered['Year'] == selected_year]
+# Filter by the list of selected years
+if selected_years:
+    df_filtered = df_filtered[df_filtered['Year'].isin(selected_years)]
+    d1_filtered = d1_filtered[d1_filtered['Year'].isin(selected_years)]
 
 # Calculate real KPI metrics dynamically based on USER SELECTION
 total_projects = len(df_filtered)
@@ -84,6 +90,9 @@ st.write("---")
 
 # Grid Layout for the Core Team Analytics & Global AI Forecasts
 st.subheader("📊 System Visualizations & AI Forecasts")
+# Safely format multiple selections into a readable string
+city_display = ", ".join(selected_cities) if selected_cities else "All Cities"
+year_display = ", ".join([str(y) for y in selected_years]) if selected_years else "All Years"
 st.write(f"Showing global system models alongside filtered real-time statistics for **{selected_city}** in **{selected_year}**.")
 
 # Making sure that there is data after filtering
@@ -117,7 +126,7 @@ if total_projects > 0:
             st.info("**Chart Logic & Insight:** This visualization filters the dataset to include only operational (Installed) projects, grouping the filtered data by Year to aggregate and calculate the total sum of annual capacity additions (MW).")
         else:
             # Show a clean warning instead of an empty/blank plot grid
-            st.warning(f"📊 **No Active Installed Projects for {selected_city} ({selected_year}):** \n\n"
+            st.warning(f"📊 **No Active Installed Projects for {city_display} ({year_display}):** \n\n"
                        f"There are currently no operational 'Installed' capacity entries registered in the dataset for this selection. "
                        f"Please adjust the filters (e.g., select All Years or 2024) to view the region's active growth metrics.")
         
@@ -142,7 +151,7 @@ if total_projects > 0:
             st.info("**Chart Logic & Insight:** This horizontal stacked bar chart displays energy capacity across Saudi cities. To focus strictly on specific individual regions, residual 'Multi-city' entries are safely excluded, sorting the remaining locations by their operational assets.")
         except KeyError as ke:
             # Displays a clean, localized summary metric box when a column like 'Installed' is mathematically missing
-            st.info(f"📊 **Localized Capacity Breakdown for {selected_city} ({selected_year}):**\n\n"
+            st.info(f"📊 **Localized Capacity Breakdown for {city_display} ({year_display}):**\n\n"
                     f"Currently, there are no 'Installed' baseline projects active for this dynamic selection. "
                     f"The total combined pipeline consists strictly of **{int(total_current_capacity):,} MW** from upcoming **Planned** infrastructure assets.")
         except Exception as e:
@@ -165,7 +174,7 @@ if total_projects > 0:
                 st.error("⚠️ Cannot calculate linear forecast: The mathematical data matrix is singular (insufficient variation in historical points).")
                 has_installed_forecast = False
         else:
-            st.warning(f"📊 **Linear Forecasting Disabled for {selected_city}:** \n\n"
+            st.warning(f"📊 **Linear Forecasting Disabled for {city_display}:** \n\n"
                        f"A Linear Regression model mathematically requires at least **2 different years** to establish a trend line ($Y = mX + c$). "
                        f"The selected filter only contains data for 1 year, making it impossible to calculate a slope.")
             has_installed_forecast = False
@@ -188,7 +197,7 @@ if total_projects > 0:
             st.error("⚠️ Cannot calculate combined linear forecast due to a mathematical alignment error in the data pipeline.")
             has_combined_forecast = False
     else:
-        st.warning(f"📊 **Combined Forecasting Disabled for {selected_city}:** \n\n"
+        st.warning(f"📊 **Combined Forecasting Disabled for {city_display}:** \n\n"
                    f"Insufficient data density. To plot a trajectory toward 2030, the model requires historical data points across multiple years to perform cumulative regression mapping.")
         has_combined_forecast = False
     plt.close(fig5_bottom)
@@ -231,12 +240,13 @@ if total_projects > 0:
                 "The target alignment evaluation metrics cannot be displayed because the predictive model requires a broader historical time-series baseline to compute standard R² and Achievement rates for this localized region.")
 
 else:
-    st.warning(f" No projects found in the dataset for the selected combination: {selected_city} in {selected_year}. Please adjust the filteres to view visualizations.")
+    
+    st.warning(f"No projects found in the dataset for the selected combination: {city_display} in {year_display}. Please adjust the filters to view visualizations.")
 
 # Dynamic Interacted Dataframe Display at the bottom
 st.write("---")
-st.subheader(f"📋 Dataset Preview: {selected_city} ({selected_year})")
+st.subheader(f"📋 Dataset Preview: {city_display} ({year_display})")
 if total_projects > 0:
     st.dataframe(df_filtered, use_container_width=True)
 else:
-    st.warning(f"No projects found in the dataset for the selected combination: {selected_city} in {selected_year}.")
+    st.warning(f"No projects found in the dataset for the selected combination.")
