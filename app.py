@@ -8,7 +8,7 @@ import os
 from data_loader import load_data
 from preprocessing import clean_data1, clean_data2, merge
 from visualization import plot_yearly_growth, plot_solar_vs_wind, plot_regional_distribution, plot_forecast_by_status
-from evaluation import evaluate_forecast
+from evaluation import evaluate_forecast, evaluate_dual_forecasts
 
 # Application page configuration
 st.set_page_config(page_title="Saudi Renewable Energy AI", layout="wide")
@@ -17,6 +17,10 @@ st.title("Saudi Arabia Renewable Energy Forecasting Platform")
 st.subheader("An interactive AI-driven MLOps dashboard analyzing and forecasting Saudi Arabia's Vision 2030 renewable energy targets.")
 
 st.write("---")
+# Initialize safe fallback variables to prevent NameError during tight filtering
+gap_val = 0.0
+has_installed_forecast = False
+has_combined_forecast = False
 
 # Load and clean the raw data using team's functions (Runs once to keep app fast)
 try:
@@ -198,7 +202,10 @@ if total_projects > 0:
     if has_combined_forecast:
         # call the evaluate function
         metrics = evaluate_forecast(p_2030, p_target, p_gap, p_r2)
-    
+        if has_installed_forecast:
+            inst_metrics = (future_2030, vision_target, gap_val, r2_val, slope_val)
+            plan_metrics = (p_2030, p_target, p_gap, p_r2, p_slope)
+            evaluate_dual_forecasts(inst_metrics, plan_metrics)
         ec1, ec2, ec3 = st.columns(3)
         with ec1:
             st.success(f"**Model Trend Fit (R² Score):** {metrics['trend_fit']:.4f}")
