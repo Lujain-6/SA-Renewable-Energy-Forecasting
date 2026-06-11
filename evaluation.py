@@ -11,7 +11,7 @@ def check_for_model_collapse(r2, estimated_yearly_growth):
     print(f"Estimated Growth: {estimated_yearly_growth:.2f} MW/year")
     print(f"===========================\n")
 
-    # 1. Performance Check: Trigger warning if R² drops below standard threshold (0.5)
+    # Performance Check: Trigger warning if R² drops below standard threshold (0.5)
     if r2 < 0.5:
         warnings.warn(
             f"[CRITICAL WARNING] Potential Operational Drift Detected!\n"
@@ -20,7 +20,7 @@ def check_for_model_collapse(r2, estimated_yearly_growth):
             UserWarning
         )
         
-    # 2. Data Integrity Check: Trigger warning if estimated growth rate becomes negative
+    # Data Integrity Check: Trigger warning if estimated growth rate becomes negative
     if estimated_yearly_growth < 0:
         warnings.warn(
             f"[DATA INTEGRITY WARNING] Negative Yearly Growth Detected ({estimated_yearly_growth:.2f} MW/year).\n"
