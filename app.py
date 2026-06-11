@@ -90,10 +90,11 @@ st.write("---")
 
 # Grid Layout for the Core Team Analytics & Global AI Forecasts
 st.subheader("📊 System Visualizations & AI Forecasts")
-# Safely format multiple selections into a readable string
+# Safely format multiple selections into a readable string separating them with commas
 city_display = ", ".join(selected_cities) if selected_cities else "All Cities"
 year_display = ", ".join([str(y) for y in selected_years]) if selected_years else "All Years"
-st.write(f"Showing global system models alongside filtered real-time statistics for **{selected_city}** in **{selected_year}**.")
+
+st.write(f"Showing global system models alongside filtered real-time statistics for **{city_display}** in **{year_display}**.")
 
 # Making sure that there is data after filtering
 if total_projects > 0:
