@@ -40,7 +40,7 @@ except Exception as e:
     st.stop()
 
 # SIDEBAR CONTROLS: Dynamic User Selection (Interactive Filters)
-st.sidebar.header("🕹️ Interactive User Controls")
+st.sidebar.header("Interactive User Controls")
 st.sidebar.write("Select filters to customize the data preview and KPIs:")
 
 # Get unique sorted cities and years directly from your real dataset
@@ -55,8 +55,8 @@ year_options = [int(y) for y in available_years]
 year_options = [int(y) for y in available_years]
 
 # Using multiselect instead of selectbox for multiple selections
-selected_cities = st.sidebar.multiselect("📍 Select City / Region:", city_options, default=city_options)
-selected_years = st.sidebar.multiselect("📅 Select Target Years:", year_options, default=year_options)
+selected_cities = st.sidebar.multiselect("Select City / Region:", city_options, default=city_options)
+selected_years = st.sidebar.multiselect("Select Target Years:", year_options, default=year_options)
 
 # Apply User Filters dynamically to the dataframe
 df_filtered = df_merged.copy()
@@ -80,16 +80,16 @@ avg_capacity = df_filtered['Capacity'].mean() if total_projects > 0 else 0
 # Display real system KPI metrics calculated from filtered data
 col1, col2, col3 = st.columns(3)
 with col1:
-    st.metric(label="📊 Tracked Projects (Filtered)", value=f"{total_projects} Projects")
+    st.metric(label="Tracked Projects (Filtered)", value=f"{total_projects} Projects")
 with col2:
-    st.metric(label="⚡ Filtered System Capacity", value=f"{int(total_current_capacity):,} MW")
+    st.metric(label="Filtered System Capacity", value=f"{int(total_current_capacity):,} MW")
 with col3:
-    st.metric(label="📐 Average Project Capacity", value=f"{avg_capacity:.2f} MW" if total_projects > 0 else "0.00 MW")
+    st.metric(label="Average Project Capacity", value=f"{avg_capacity:.2f} MW" if total_projects > 0 else "0.00 MW")
     
 st.write("---")
 
 # Grid Layout for the Core Team Analytics & Global AI Forecasts
-st.subheader("📊 System Visualizations & AI Forecasts")
+st.subheader("System Visualizations & AI Forecasts")
 # Safely format multiple selections into a readable string separating them with commas
 city_display = ", ".join(selected_cities) if selected_cities else "All Cities"
 year_display = ", ".join([str(y) for y in selected_years]) if selected_years else "All Years"
@@ -127,7 +127,7 @@ if total_projects > 0:
             st.info("**Chart Logic & Insight:** This visualization filters the dataset to include only operational (Installed) projects, grouping the filtered data by Year to aggregate and calculate the total sum of annual capacity additions (MW).")
         else:
             # Show a clean warning instead of an empty/blank plot grid
-            st.warning(f"📊 **No Active Installed Projects for {city_display} ({year_display}):** \n\n"
+            st.warning(f"**No Active Installed Projects for {city_display} ({year_display}):** \n\n"
                        f"There are currently no operational 'Installed' capacity entries registered in the dataset for this selection. "
                        f"Please adjust the filters (e.g., select All Years or 2024) to view the region's active growth metrics.")
         
@@ -152,7 +152,7 @@ if total_projects > 0:
             st.info("**Chart Logic & Insight:** This horizontal stacked bar chart displays energy capacity across Saudi cities. To focus strictly on specific individual regions, residual 'Multi-city' entries are safely excluded, sorting the remaining locations by their operational assets.")
         except KeyError as ke:
             # Displays a clean, localized summary metric box when a column like 'Installed' is mathematically missing
-            st.info(f"📊 **Localized Capacity Breakdown for {city_display} ({year_display}):**\n\n"
+            st.info(f"**Localized Capacity Breakdown for {city_display} ({year_display}):**\n\n"
                     f"Currently, there are no 'Installed' baseline projects active for this dynamic selection. "
                     f"The total combined pipeline consists strictly of **{int(total_current_capacity):,} MW** from upcoming **Planned** infrastructure assets.")
         except Exception as e:
@@ -172,10 +172,10 @@ if total_projects > 0:
                 st.info("**Forecast Interpretation (Installed Track):** The model uses historical renewable energy growth to estimate future cumulative capacity. This forecast is approximate because it is based on limited historical data and a linear trend. Using installed projects only, the 2030 capacity may be about below the Vision 2030 target.")
                 has_installed_forecast = True
             except Exception as forecast_err:
-                st.error("⚠️ Cannot calculate linear forecast: The mathematical data matrix is singular (insufficient variation in historical points).")
+                st.error("Cannot calculate linear forecast: The mathematical data matrix is singular (insufficient variation in historical points).")
                 has_installed_forecast = False
         else:
-            st.warning(f"📊 **Linear Forecasting Disabled for {city_display}:** \n\n"
+            st.warning(f"**Linear Forecasting Disabled for {city_display}:** \n\n"
                        f"A Linear Regression model mathematically requires at least **2 different years** to establish a trend line ($Y = mX + c$). "
                        f"The selected filter only contains data for 1 year, making it impossible to calculate a slope.")
             has_installed_forecast = False
@@ -195,10 +195,10 @@ if total_projects > 0:
             st.info("**Forecast Interpretation (Combined Track):** This predictive model evaluates the combined pipeline by running historical data alongside upcoming planned projects through a cumulative sum. After adding planned assets, the expected 2030 gap decreases significantly to help fully align with the national target line.")
             has_combined_forecast = True
         except Exception as combined_err:
-            st.error("⚠️ Cannot calculate combined linear forecast due to a mathematical alignment error in the data pipeline.")
+            st.error("Cannot calculate combined linear forecast due to a mathematical alignment error in the data pipeline.")
             has_combined_forecast = False
     else:
-        st.warning(f"📊 **Combined Forecasting Disabled for {city_display}:** \n\n"
+        st.warning(f"**Combined Forecasting Disabled for {city_display}:** \n\n"
                    f"Insufficient data density. To plot a trajectory toward 2030, the model requires historical data points across multiple years to perform cumulative regression mapping.")
         has_combined_forecast = False
     plt.close(fig5_bottom)
@@ -206,7 +206,7 @@ if total_projects > 0:
     
     # User-Centric AI Model Evaluation Report Section
     st.write("---")
-    st.subheader("🎯 Automated Vision 2030 Alignment Report (Installed + Planned)")
+    st.subheader("Automated Vision 2030 Alignment Report (Installed + Planned)")
 
     # The report only appears if the prediction succeeds
     if has_combined_forecast:
@@ -228,7 +228,7 @@ if total_projects > 0:
             st.metric(label="Target Achievement Rate", value=f"{metrics['achievement_rate']:.2f}%")
 
         # Clear and simple forecasting explanation for the user
-        st.markdown("### 💡 Forecast Interpretation")
+        st.markdown("###Forecast Interpretation")
         st.info(f"""
         * The model uses historical renewable energy growth to estimate future cumulative capacity.
         * This forecast is approximate because it is based on limited historical data and a linear trend.
@@ -237,7 +237,7 @@ if total_projects > 0:
         * Planned projects may reduce the gap by about **{(gap_val - p_gap):,.0f} MW**.
         """)
     else:
-        st.info("💡 **Alignment Report Summary Unavailable:** \n\n"
+        st.info("**Alignment Report Summary Unavailable:** \n\n"
                 "The target alignment evaluation metrics cannot be displayed because the predictive model requires a broader historical time-series baseline to compute standard R² and Achievement rates for this localized region.")
 
 else:
@@ -245,7 +245,7 @@ else:
 
 # Dynamic Interacted Dataframe Display at the bottom
 st.write("---")
-st.subheader(f"📋 Dataset Preview")
+st.subheader(f"Dataset Preview")
 if total_projects > 0:
     st.dataframe(df_filtered, use_container_width=True)
 else:
